@@ -9,4 +9,5 @@ public abstract class SparseStorage<TKey> : ISparseStorage<TKey>
     public TKey Columns { get; protected set; }
     public abstract TKey NumberOfNonzeroElements { get; protected set; }
     public abstract void PrintStorage();
+    public abstract SparseStorage<TKey> Copy();
 }

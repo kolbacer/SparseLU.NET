@@ -107,6 +107,25 @@ internal partial class CsrStorage
             ColumnIndices.Insert(i, element.ColumnIndex);
             Values.Insert(i, element.Value);
         }
+
+        public void RemoveColumnIndexAt(stype i)
+        {
+            if (i < 0 || i >= storage.Columns) throw new OutOfMatrixException();
+            ColumnIndices.RemoveAt(i);
+        }
+        
+        public void RemoveValueAt(stype i)
+        {
+            if (i < 0 || i >= storage.Columns) throw new OutOfMatrixException();
+            Values.RemoveAt(i);
+        }
+
+        public void RemoveElementAt(stype i)
+        {
+            if (i < 0 || i >= storage.Columns) throw new OutOfMatrixException();
+            ColumnIndices.RemoveAt(i);
+            Values.RemoveAt(i);
+        }
         
         public Element this[stype i]
         {

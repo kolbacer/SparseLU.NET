@@ -2,8 +2,8 @@
 
 internal partial class CsrStorage : SparseStorage<stype>
 {
-    private List<List<stype>> ColumnIndexRows;
-    private List<List<vtype>> ValueRows;
+    public List<List<stype>> ColumnIndexRows { get; private set; }
+    public List<List<vtype>> ValueRows { get; private set; }
 
     public CsrStorage(stype Rows, stype Columns)
     {
@@ -19,6 +19,8 @@ internal partial class CsrStorage : SparseStorage<stype>
             ValueRows.Add(new List<vtype>());
         }
     }
+    
+    private CsrStorage() {}
     
     public override stype NumberOfNonzeroElements
     {
@@ -67,5 +69,21 @@ internal partial class CsrStorage : SparseStorage<stype>
     public CompressedRow GetCompressedRow(stype rowIndex)
     {
         return new CompressedRow(this, rowIndex);
+    }
+
+    public override CsrStorage Copy()
+    {
+        CsrStorage newStorage = new CsrStorage();
+        newStorage.Rows = Rows;
+        newStorage.Columns = Columns;
+        newStorage.ColumnIndexRows = new List<List<stype>>(Rows);
+        newStorage.ValueRows = new List<List<vtype>>(Rows);
+        for (stype i = 0; i < Rows; ++i)
+        {
+            newStorage.ColumnIndexRows.Add(new List<stype>(ColumnIndexRows[i]));
+            newStorage.ValueRows.Add(new List<vtype>(ValueRows[i]));
+        }
+
+        return newStorage;
     }
 }

@@ -1,8 +1,135 @@
-﻿namespace SparseMatrixAlgebra.Sparse.CSR;
+﻿using SparseMatrixAlgebra.Common.Exceptions;
+using SparseMatrixAlgebra.Common.Extensions;
+using Element = SparseMatrixAlgebra.Sparse.CSR.CsrStorage.CompressedRow.Element;
+    
+namespace SparseMatrixAlgebra.Sparse.CSR;
 
 public partial class SparseMatrixCsr
 {
-    public override void AddRows(stype augend, stype addend, vtype coef) => throw new NotImplementedException();
-    public override void SwapRows(stype row1, stype row2) => throw new NotImplementedException();
+    public override void AddRows(stype augend, stype addend, vtype coef = 1)
+    {
+        if (augend < 1 || augend > Rows || addend < 1 || addend > Rows)
+            throw new OutOfMatrixException();
+        
+        if (coef == 0) return; // coef.IsZero()?
+
+        stype iAugend = augend - 1;
+        stype iAddend = addend - 1;
+        
+        var columnIndexRows = ((CsrStorage)Storage).ColumnIndexRows;
+        var valueRows = ((CsrStorage)Storage).ValueRows;
+        
+        if (columnIndexRows[iAddend].Count == 0) return; // addend row is empty
+
+        // augend == addend
+        if (iAugend == iAddend)
+        {
+            if (coef == -1)
+            {
+                columnIndexRows[iAugend] = new List<stype>();
+                valueRows[iAugend] = new List<vtype>();
+                
+                return;
+            }
+
+            var compressedRow = GetCompressedRow(iAugend);
+            for (stype i = 0; i < compressedRow.Count; ++i)
+            {
+                compressedRow.SetValueAt(i, compressedRow.GetValueAt(i) * (1 + coef));
+            }
+            
+            return;
+        }
+        
+        // augend != addend
+
+        var augendRow = GetCompressedRow(iAugend);
+        var addendRow = GetCompressedRow(iAddend);
+        
+        // augend row is empty
+        if (augendRow.Count == 0)
+        {
+            var augendIndices = augendRow.ColumnIndices;
+            var augendValues = augendRow.Values;
+
+            augendIndices.Capacity = addendRow.Count;
+            augendValues.Capacity = addendRow.Count;
+            
+            for (stype i = 0; i < addendRow.Count; ++i)
+            {
+                augendIndices.Add(addendRow.GetColumnIndexAt(i));
+                augendValues.Add(addendRow.GetValueAt(i) * coef);
+            }
+            
+            return;
+        }
+        
+        // augend row is not empty
+        
+        List<stype> newColumnIndices = new List<stype>(augendRow.Count + addendRow.Count);
+        List<vtype> newValues = new List<vtype>(augendRow.Count + addendRow.Count);
+
+        stype i_aug = 0;
+        stype i_add = 0;
+        while (i_aug < augendRow.Count || i_add < addendRow.Count)
+        {
+            stype? augColumnIndex = (i_aug < augendRow.Count) ? augendRow.GetColumnIndexAt(i_aug) : null;
+            stype? addColumnIndex = (i_add < addendRow.Count) ? addendRow.GetColumnIndexAt(i_add) : null;
+
+            stype colIndexToAdd;
+            vtype valueToAdd;
+
+            if ((addColumnIndex is null) || (augColumnIndex < addColumnIndex))
+            {
+                colIndexToAdd = augColumnIndex.Value;
+                valueToAdd = augendRow.GetValueAt(i_aug);
+                ++i_aug;
+            } else if ((augColumnIndex is null) || (addColumnIndex < augColumnIndex))
+            {
+                colIndexToAdd = addColumnIndex.Value;
+                valueToAdd = addendRow.GetValueAt(i_add) * coef;
+                ++i_add;
+            } else
+            {
+                colIndexToAdd = augColumnIndex.Value;
+                valueToAdd = augendRow.GetValueAt(i_aug) + (addendRow.GetValueAt(i_add) * coef);
+                ++i_aug;
+                ++i_add;
+            }
+
+            if (!valueToAdd.IsZero())
+            {
+                newColumnIndices.Add(colIndexToAdd);
+                newValues.Add(valueToAdd);
+            }
+        }
+        
+        newColumnIndices.TrimExcess();
+        newValues.TrimExcess();
+
+        columnIndexRows[iAugend] = newColumnIndices;
+        valueRows[iAugend] = newValues;
+    }
+
+    public override void SwapRows(stype row1, stype row2)
+    {
+        if (row1 < 1 || row1 > Rows || row2 < 1 || row2 > Rows)
+            throw new OutOfMatrixException();
+        
+        if (row1 == row2) return;
+
+        stype iRow1 = row1 - 1;
+        stype iRow2 = row2 - 1;
+
+        var columnIndexRows = ((CsrStorage)Storage).ColumnIndexRows;
+        var valueRows = ((CsrStorage)Storage).ValueRows;
+
+        var tmpIndexRow = columnIndexRows[iRow1];
+        var tmpValueRow = valueRows[iRow1];
+        columnIndexRows[iRow1] = columnIndexRows[iRow2];
+        valueRows[iRow1] = valueRows[iRow2];
+        columnIndexRows[iRow2] = tmpIndexRow;
+        valueRows[iRow2] = tmpValueRow;
+    }
     public override SparseVector<stype,vtype> MultiplyByVector(SparseVector<stype,vtype> vector) => throw new NotImplementedException();
 }

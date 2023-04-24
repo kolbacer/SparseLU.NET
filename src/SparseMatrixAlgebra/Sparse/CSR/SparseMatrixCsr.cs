@@ -1,4 +1,5 @@
 ﻿using SparseMatrixAlgebra.Common.Exceptions;
+using SparseMatrixAlgebra.Common.Extensions;
 using Element = SparseMatrixAlgebra.Sparse.CSR.CsrStorage.CompressedRow.Element;
 
 namespace SparseMatrixAlgebra.Sparse.CSR;
@@ -53,15 +54,20 @@ public partial class SparseMatrixCsr : SparseMatrix<stype,vtype>
             stype columnIndex = compressedRow.GetColumnIndexAt(i);
             if (columnIndex == iCol)
             {
-                compressedRow.SetValueAt(i, value);
+                if (value.IsZero())
+                    compressedRow.RemoveElementAt(i);
+                else
+                    compressedRow.SetValueAt(i, value);
                 return;
             } else if (columnIndex > iCol)
             {
-                compressedRow.InsertElement(i, new Element(iCol,value));
+                if (!value.IsZero()) 
+                    compressedRow.InsertElement(i, new Element(iCol,value));
                 return;
             }
         }
-        compressedRow.AddElement(new Element(iCol,value));
+        if (!value.IsZero()) 
+            compressedRow.AddElement(new Element(iCol,value));
     }
     
     public override void Print()
@@ -88,8 +94,8 @@ public partial class SparseMatrixCsr : SparseMatrix<stype,vtype>
             logger.Print(rowString);
         }
     }
-    
-    public override SparseMatrixCsr Copy() => throw new NotImplementedException();
+
+    public override SparseMatrixCsr Copy() => new SparseMatrixCsr((CsrStorage)Storage.Copy());
     
     public override SparseVector<stype,vtype> SolveSLAE(SparseVector<stype,vtype> b) => throw new NotImplementedException();
 }

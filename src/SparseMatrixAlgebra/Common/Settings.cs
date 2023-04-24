@@ -6,7 +6,7 @@ namespace SparseMatrixAlgebra.Common
     public static class Settings
     {
         /// <summary>
-        /// Что считать нулем.
+        /// Что считать нулем (должно быть неотрицательным).
         /// </summary>
         public const vtype eps = 1e-10;
     }
