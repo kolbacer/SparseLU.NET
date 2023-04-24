@@ -1,6 +1,6 @@
 ﻿using SparseMatrixAlgebra.Common.Exceptions;
 using SparseMatrixAlgebra.Common.Extensions;
-using Element = SparseMatrixAlgebra.Sparse.CSR.CsrStorage.CompressedRow.Element;
+using Element = SparseMatrixAlgebra.Sparse.CSR.SparseVector.Element;
     
 namespace SparseMatrixAlgebra.Sparse.CSR;
 
@@ -34,8 +34,8 @@ public partial class SparseMatrixCsr
                 return;
             }
 
-            var compressedRow = GetCompressedRow(iAugend);
-            for (stype i = 0; i < compressedRow.Count; ++i)
+            var compressedRow = GetRowAsVector(iAugend);
+            for (stype i = 0; i < compressedRow.NumberOfNonzeroElements; ++i)
             {
                 compressedRow.SetValueAt(i, compressedRow.GetValueAt(i) * (1 + coef));
             }
@@ -45,21 +45,21 @@ public partial class SparseMatrixCsr
         
         // augend != addend
 
-        var augendRow = GetCompressedRow(iAugend);
-        var addendRow = GetCompressedRow(iAddend);
+        var augendRow = GetRowAsVector(iAugend);
+        var addendRow = GetRowAsVector(iAddend);
         
         // augend row is empty
-        if (augendRow.Count == 0)
+        if (augendRow.NumberOfNonzeroElements == 0)
         {
-            var augendIndices = augendRow.ColumnIndices;
+            var augendIndices = augendRow.Indices;
             var augendValues = augendRow.Values;
-
-            augendIndices.Capacity = addendRow.Count;
-            augendValues.Capacity = addendRow.Count;
             
-            for (stype i = 0; i < addendRow.Count; ++i)
+            augendIndices.Capacity = addendRow.NumberOfNonzeroElements;
+            augendValues.Capacity = addendRow.NumberOfNonzeroElements;
+            
+            for (stype i = 0; i < addendRow.NumberOfNonzeroElements; ++i)
             {
-                augendIndices.Add(addendRow.GetColumnIndexAt(i));
+                augendIndices.Add(addendRow.GetIndexAt(i));
                 augendValues.Add(addendRow.GetValueAt(i) * coef);
             }
             
@@ -68,15 +68,15 @@ public partial class SparseMatrixCsr
         
         // augend row is not empty
         
-        List<stype> newColumnIndices = new List<stype>(augendRow.Count + addendRow.Count);
-        List<vtype> newValues = new List<vtype>(augendRow.Count + addendRow.Count);
+        List<stype> newColumnIndices = new List<stype>(augendRow.NumberOfNonzeroElements + addendRow.NumberOfNonzeroElements);
+        List<vtype> newValues = new List<vtype>(augendRow.NumberOfNonzeroElements + addendRow.NumberOfNonzeroElements);
 
         stype i_aug = 0;
         stype i_add = 0;
-        while (i_aug < augendRow.Count || i_add < addendRow.Count)
+        while (i_aug < augendRow.NumberOfNonzeroElements || i_add < addendRow.NumberOfNonzeroElements)
         {
-            stype? augColumnIndex = (i_aug < augendRow.Count) ? augendRow.GetColumnIndexAt(i_aug) : null;
-            stype? addColumnIndex = (i_add < addendRow.Count) ? addendRow.GetColumnIndexAt(i_add) : null;
+            stype? augColumnIndex = (i_aug < augendRow.NumberOfNonzeroElements) ? augendRow.GetIndexAt(i_aug) : null;
+            stype? addColumnIndex = (i_add < addendRow.NumberOfNonzeroElements) ? addendRow.GetIndexAt(i_add) : null;
 
             stype colIndexToAdd;
             vtype valueToAdd;
@@ -133,5 +133,25 @@ public partial class SparseMatrixCsr
         columnIndexRows[iRow2] = tmpIndexRow;
         valueRows[iRow2] = tmpValueRow;
     }
+
+    public override SparseMatrixCsr Transposed()
+    {
+        var transposedStorage = new CsrStorage(Columns, Rows);
+        var trColumnIndexRows = transposedStorage.ColumnIndexRows;
+        var trValueRows = transposedStorage.ValueRows;
+
+        for (stype i = 0; i < Rows; ++i)
+        {
+            var compressedRow = GetRowAsVector(i);
+            for (stype j = 0; j < compressedRow.NumberOfNonzeroElements; ++j)
+            {
+                trColumnIndexRows[compressedRow.GetIndexAt(j)].Add(i);
+                trValueRows[compressedRow.GetIndexAt(j)].Add(compressedRow.GetValueAt(j));
+            }
+        }
+
+        return new SparseMatrixCsr(transposedStorage);
+    }
+    
     public override SparseVector<stype,vtype> MultiplyByVector(SparseVector<stype,vtype> vector) => throw new NotImplementedException();
 }

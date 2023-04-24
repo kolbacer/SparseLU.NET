@@ -42,6 +42,11 @@ public abstract class SparseMatrix<TKey,TValue> : IMatrix<TKey,TValue,SparseMatr
     /// Поменять местами 2 строки в матрице
     /// </summary>
     public abstract void SwapRows(TKey row1, TKey row2);
+
+    /// <summary>
+    /// Создать транспонированную матрицу
+    /// </summary>
+    public abstract SparseMatrix<TKey, TValue> Transposed();
     public abstract SparseLU<TKey,TValue> LuFactorize();
     public abstract SparseVector<TKey,TValue> MultiplyByVector(SparseVector<TKey,TValue> vector);
     public abstract SparseVector<TKey,TValue> SolveSLAE(SparseVector<TKey,TValue> b);

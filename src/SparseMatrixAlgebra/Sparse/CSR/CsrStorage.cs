@@ -50,11 +50,11 @@ internal partial class CsrStorage : SparseStorage<stype>
         
         for (stype i = 0; i < Rows; ++i)
         {
-            var compressedRow = GetCompressedRow(i);
-            for (stype j = 0; j < compressedRow.Count; ++j)
+            var compressedRow = GetRowAsVector(i);
+            for (stype j = 0; j < compressedRow.NumberOfNonzeroElements; ++j)
             {
                 var element = compressedRow[j];
-                indicesString += $"{element.ColumnIndex,6:0} ";
+                indicesString += $"{element.Index,6:0} ";
                 valuesString += $"{element.Value,6:0.##} ";
             }
 
@@ -65,10 +65,13 @@ internal partial class CsrStorage : SparseStorage<stype>
         logger.Print(indicesString);
         logger.Print(valuesString);
     }
-    
-    public CompressedRow GetCompressedRow(stype rowIndex)
+
+    /// <summary>
+    /// Получить строку матрицы в виде вектора.
+    /// </summary>
+    public SparseVector GetRowAsVector(stype rowIndex)
     {
-        return new CompressedRow(this, rowIndex);
+        return new SparseVector(Columns, false, ColumnIndexRows[rowIndex], ValueRows[rowIndex]);
     }
 
     public override CsrStorage Copy()

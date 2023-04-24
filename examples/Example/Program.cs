@@ -98,6 +98,51 @@ internal static class Program
         Console.WriteLine("row2 += row2*(-1)");
         matrix1.Print();
 
+        Console.WriteLine();
+        var matrix3 = matrix1.Transposed();
+        Console.WriteLine("Transposed:");
+        matrix3.Print();
+
+        Console.WriteLine();
+        var matrix4 = MatrixBuilder.CreateCsr(3, 5);
+        matrix4.SetElement(1, 1, 5);
+        matrix4.SetElement(1, 3, 8);
+        matrix4.SetElement(2, 2, 4);
+        matrix4.SetElement(2, 4, 4.6);
+        matrix4.SetElement(2, 5, 77);
+        matrix4.SetElement(3, 4, 0.13);
+        Console.WriteLine("Non-square matrix:");
+        matrix4.Print();
+
+        Console.WriteLine();
+        Console.WriteLine("Transposed:");
+        matrix4.Transposed().Print();
+        
+        Console.WriteLine();
+        var vector = MatrixBuilder.CreateCsrVector(5);
+        vector.SetElement(1, 3);
+        vector.SetElement(3, 4.56);
+        vector.SetElement(4, 8);
+        Console.WriteLine("Vector:");
+        vector.Print();
+
+        Console.WriteLine();
+        vector.IsColumn = true;
+        Console.WriteLine("As column:");
+        vector.Print();
+
+        Console.WriteLine();
+        Console.WriteLine("Example output:");
+        for (int i = 1; i <= vector.Length; ++i)
+        {
+            Console.Write($"{vector.GetElement(i)} ");
+        }
+        Console.WriteLine();
+
+        Console.WriteLine();
+        Console.WriteLine("Storage:");
+        vector.PrintStorage();
+
         Console.ReadLine();
     }
 

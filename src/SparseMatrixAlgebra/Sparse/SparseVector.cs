@@ -8,9 +8,11 @@ public abstract class SparseVector<TKey,TValue> : IVector<TKey,TValue>, ISparseS
     where TValue: IBinaryNumber<TValue>
 {
     public abstract TKey Length { get; }
-    public abstract bool IsColumn { get; }
-    public abstract void Print();
-    
+    public abstract bool IsColumn { get; set; }
     public abstract TKey NumberOfNonzeroElements { get; }
+    public abstract TValue GetElement(TKey index);
+    public abstract void SetElement(TKey index, TValue value);
+    public abstract void Print();
+    public abstract void Print(bool asColumn);
     public abstract void PrintStorage();
 }
