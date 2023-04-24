@@ -95,7 +95,6 @@ internal static class Program
         
         Console.WriteLine();
         matrix1.AddRows(2, 2, -1);
-        // matrix1.AddRows(2, 2);
         Console.WriteLine("row2 += row2*(-1)");
         matrix1.Print();
 

@@ -1,8 +1,10 @@
-﻿namespace SparseMatrixAlgebra.Common.Interfaces;
+﻿using System.Numerics;
+
+namespace SparseMatrixAlgebra.Common.Interfaces;
 
 public interface ILU<TKey,TValue,TVector,TMatrix>
-    where TKey : IComparable
-    where TValue: IComparable
+    where TKey : IBinaryInteger<TKey>
+    where TValue: IBinaryNumber<TValue>
     where TVector: IVector<TKey, TValue>
     where TMatrix: IMatrix<TKey,TValue,TMatrix>
 {

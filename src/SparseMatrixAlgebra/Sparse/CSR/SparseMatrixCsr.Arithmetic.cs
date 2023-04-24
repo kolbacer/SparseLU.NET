@@ -6,7 +6,9 @@ namespace SparseMatrixAlgebra.Sparse.CSR;
 
 public partial class SparseMatrixCsr
 {
-    public override void AddRows(stype augend, stype addend, vtype coef = 1)
+    public override void AddRows(stype augend, stype addend) => AddRows(augend, addend, 1);
+    
+    public override void AddRows(stype augend, stype addend, vtype coef)
     {
         if (augend < 1 || augend > Rows || addend < 1 || addend > Rows)
             throw new OutOfMatrixException();

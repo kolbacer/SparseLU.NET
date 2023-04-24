@@ -1,8 +1,10 @@
-﻿namespace SparseMatrixAlgebra.Common.Interfaces;
+﻿using System.Numerics;
+
+namespace SparseMatrixAlgebra.Common.Interfaces;
 
 public interface IVector<TKey,TValue>
-    where TKey : IComparable
-    where TValue: IComparable
+    where TKey : IBinaryInteger<TKey>
+    where TValue: IBinaryNumber<TValue>
 {
     TKey Length { get; }
     bool IsColumn { get; }

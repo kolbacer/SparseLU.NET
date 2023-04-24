@@ -1,7 +1,9 @@
-﻿namespace SparseMatrixAlgebra.Common.Interfaces;
+﻿using System.Numerics;
+
+namespace SparseMatrixAlgebra.Common.Interfaces;
 
 public interface ISparseStorage<TKey>
-    where TKey : IComparable
+    where TKey : IBinaryInteger<TKey>
 {
     TKey NumberOfNonzeroElements { get; }
     

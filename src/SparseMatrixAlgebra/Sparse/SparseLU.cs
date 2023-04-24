@@ -1,10 +1,11 @@
-﻿using SparseMatrixAlgebra.Common.Interfaces;
+﻿using System.Numerics;
+using SparseMatrixAlgebra.Common.Interfaces;
 
 namespace SparseMatrixAlgebra.Sparse;
 
 public abstract class SparseLU<TKey,TValue> : ILU<TKey,TValue,SparseVector<TKey,TValue>,SparseMatrix<TKey,TValue>>
-    where TKey : IComparable
-    where TValue: IComparable
+    where TKey : IBinaryInteger<TKey>
+    where TValue: IBinaryNumber<TValue>
 {
     public abstract SparseMatrix<TKey,TValue> L { get; }
     public abstract SparseMatrix<TKey,TValue> U { get; }

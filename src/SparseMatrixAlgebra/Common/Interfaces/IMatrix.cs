@@ -1,8 +1,10 @@
-﻿namespace SparseMatrixAlgebra.Common.Interfaces;
+﻿using System.Numerics;
+
+namespace SparseMatrixAlgebra.Common.Interfaces;
 
 public interface IMatrix<TKey,TValue,TMatrix>
-    where TKey : IComparable
-    where TValue: IComparable
+    where TKey : IBinaryInteger<TKey>
+    where TValue: IBinaryNumber<TValue>
     where TMatrix: IMatrix<TKey,TValue,TMatrix>
 {
     TKey Rows { get; }

@@ -1,4 +1,5 @@
-﻿using SparseMatrixAlgebra.Common.Interfaces;
+﻿using System.Numerics;
+using SparseMatrixAlgebra.Common.Interfaces;
 
 namespace SparseMatrixAlgebra.Sparse;
 
@@ -7,8 +8,8 @@ public abstract class SparseMatrix<TKey,TValue> : IMatrix<TKey,TValue,SparseMatr
                                                       SparseVector<TKey,TValue>, 
                                                       SparseMatrix<TKey,TValue>,
                                                       SparseLU<TKey,TValue>>
-    where TKey : IComparable
-    where TValue: IComparable
+    where TKey : IBinaryInteger<TKey>
+    where TValue: IBinaryNumber<TValue>
 {
     protected SparseStorage<TKey> Storage;
     public TKey Rows { get => Storage.Rows; }
@@ -29,6 +30,13 @@ public abstract class SparseMatrix<TKey,TValue> : IMatrix<TKey,TValue,SparseMatr
     /// <param name="addend">Строка, которую прибавляем</param>
     /// <param name="coef">Коэффициент домножения</param>
     public abstract void AddRows(TKey augend, TKey addend, TValue coef);
+    
+    /// <summary>
+    /// Сложение строк матрицы.
+    /// </summary>
+    /// <param name="augend">Строка, к которой прибавляем</param>
+    /// <param name="addend">Строка, которую прибавляем</param>
+    public abstract void AddRows(TKey augend, TKey addend);
     
     /// <summary>
     /// Поменять местами 2 строки в матрице
