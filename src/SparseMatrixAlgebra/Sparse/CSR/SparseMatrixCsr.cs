@@ -16,7 +16,11 @@ public partial class SparseMatrixCsr : SparseMatrix<stype,vtype>
         Storage = storage;
     }
 
-    private SparseVector GetRowAsVector(stype rowIndex) => 
+    /// <summary>
+    /// Получить строку матрицы в виде вектора.
+    /// НЕ создает копию хранилища.
+    /// </summary>
+    internal SparseVector GetRowAsVector(stype rowIndex) => 
         ((CsrStorage)Storage).GetRowAsVector(rowIndex);
 
     public override vtype GetElement(stype row, stype column)

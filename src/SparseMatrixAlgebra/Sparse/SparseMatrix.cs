@@ -48,6 +48,15 @@ public abstract class SparseMatrix<TKey,TValue> : IMatrix<TKey,TValue,SparseMatr
     /// </summary>
     public abstract SparseMatrix<TKey, TValue> Transposed();
     public abstract SparseLU<TKey,TValue> LuFactorize();
+    
+    /// <summary>
+    /// Умножить матрицу на вектор-столбец
+    /// </summary>
     public abstract SparseVector<TKey,TValue> MultiplyByVector(SparseVector<TKey,TValue> vector);
+    
+    /// <summary>
+    /// Умножить матрицу на матрицу
+    /// </summary>
+    public abstract SparseMatrix<TKey,TValue> MultiplyByMatrix(SparseMatrix<TKey,TValue> matrix);
     public abstract SparseVector<TKey,TValue> SolveSLAE(SparseVector<TKey,TValue> b);
 }

@@ -1,6 +1,6 @@
 ﻿namespace SparseMatrixAlgebra.Sparse.CSR;
 
-internal partial class CsrStorage : SparseStorage<stype>
+internal class CsrStorage : SparseStorage<stype>
 {
     public List<List<stype>> ColumnIndexRows { get; private set; }
     public List<List<vtype>> ValueRows { get; private set; }
@@ -18,6 +18,18 @@ internal partial class CsrStorage : SparseStorage<stype>
             ColumnIndexRows.Add(new List<stype>());
             ValueRows.Add(new List<vtype>());
         }
+    }
+
+    /// <summary>
+    /// Создать хранилище на основе массивов индексов и значений.
+    /// НЕ создает копию массивов.
+    /// </summary>
+    internal CsrStorage(stype Rows, stype Columns, List<List<stype>> ColumnIndexRows, List<List<vtype>> ValueRows)
+    {
+        this.Rows = Rows;
+        this.Columns = Columns;
+        this.ColumnIndexRows = ColumnIndexRows;
+        this.ValueRows = ValueRows;
     }
     
     private CsrStorage() {}
@@ -68,6 +80,7 @@ internal partial class CsrStorage : SparseStorage<stype>
 
     /// <summary>
     /// Получить строку матрицы в виде вектора.
+    /// НЕ создает копию хранилища.
     /// </summary>
     public SparseVector GetRowAsVector(stype rowIndex)
     {

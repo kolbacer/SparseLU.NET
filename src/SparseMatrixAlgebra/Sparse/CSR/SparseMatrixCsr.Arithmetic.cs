@@ -153,5 +153,45 @@ public partial class SparseMatrixCsr
         return new SparseMatrixCsr(transposedStorage);
     }
     
-    public override SparseVector<stype,vtype> MultiplyByVector(SparseVector<stype,vtype> vector) => throw new NotImplementedException();
+    public override SparseVector<stype, vtype> MultiplyByVector(SparseVector<stype, vtype> vector)
+    {
+        if (vector is not SparseVector) throw new IncompatibleTypeException("vector must be SparseVector");
+        if (Columns != vector.Length) throw new IncompatibleDimensionsException();
+        
+        SparseVector colVector = (SparseVector)vector;
+        SparseVector resultVector = new SparseVector(Rows,true);
+
+        for (stype i = 0; i < Rows; ++i)
+        {
+            vtype value = GetRowAsVector(i).MultiplyRowByColumn(colVector);
+            if (!value.IsZero())
+                resultVector.AddElement(new Element(i, value));
+        }
+
+        return resultVector;
+    }
+    
+    public override SparseMatrix<stype, vtype> MultiplyByMatrix(SparseMatrix<stype, vtype> matrix)
+    {
+        if (matrix is not SparseMatrixCsr) throw new IncompatibleTypeException("matrix must be SparseMatrixCsr");
+        if (Columns != matrix.Rows) throw new IncompatibleDimensionsException();
+    
+        SparseMatrixCsr thisMatrix = this;
+        SparseMatrixCsr otherMatrix = (SparseMatrixCsr)matrix;
+        SparseMatrixCsr otherMatrixTransposed = otherMatrix.Transposed();
+
+        List<List<stype>> newColumnIndexRows = new List<List<stype>>(thisMatrix.Rows);
+        List<List<vtype>> newValueRows= new List<List<vtype>>(thisMatrix.Rows);
+
+        for (stype i = 0; i < thisMatrix.Rows; ++i)
+        {
+            SparseVector newRow = thisMatrix.GetRowAsVector(i).MultiplyRowByMatrix(otherMatrixTransposed, true);
+            newColumnIndexRows.Add(newRow.Indices);
+            newValueRows.Add(newRow.Values);
+        }
+
+        return new SparseMatrixCsr(new CsrStorage(
+            thisMatrix.Rows, otherMatrix.Columns, newColumnIndexRows, newValueRows)
+        );
+    }
 }

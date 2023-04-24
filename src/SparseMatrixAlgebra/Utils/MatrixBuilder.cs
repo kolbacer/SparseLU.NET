@@ -17,7 +17,7 @@ public static class MatrixBuilder
 
     public static SparseMatrix<stype, vtype> ReadCsrFromFile(string filepath) => throw new NotImplementedException();
 
-    public static SparseVector<stype, vtype> CreateCsrVector(stype length)
+    public static SparseVector CreateCsrVector(stype length)
     {
         return new SparseVector(length);
     }

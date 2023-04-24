@@ -143,6 +143,76 @@ internal static class Program
         Console.WriteLine("Storage:");
         vector.PrintStorage();
 
+        Console.WriteLine();
+        var vector1 = MatrixBuilder.CreateCsrVector(5);
+        vector1.SetElement(2,3.5);
+        vector1.SetElement(3, 1);
+        vector1.SetElement(4, 2);
+        Console.WriteLine("Vector1");
+        vector1.Print();
+
+        Console.WriteLine();
+        Console.WriteLine("Vector(row)*Vector1(column) = " + vector.MultiplyRowByColumn(vector1));
+        Console.WriteLine("Vector1(row)*Vector(column) = " + vector1.MultiplyRowByColumn(vector));
+
+        Console.WriteLine();
+        var matrix5 = vector.MultiplyColumnByRow(vector1);
+        Console.WriteLine("Vector(column)*Vector1(row)");
+        matrix5.Print();
+
+        Console.WriteLine();
+        var vector2 = MatrixBuilder.CreateCsrVector(3);
+        vector2.SetElement(1, 5.2);
+        vector2.SetElement(3, 4);
+        Console.WriteLine("Vector2:");
+        vector2.Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("matrix6 = Vector1(column)*Vector2(row):");
+        var matrix6 = vector1.MultiplyColumnByRow(vector2);
+        matrix6.Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("Vector2(column)*Vector1(row):");
+        vector2.MultiplyColumnByRow(vector1).Print();
+
+        Console.WriteLine();
+        var matrix7 = MatrixBuilder.CreateCsr(3, 5);
+        matrix7.SetElement(1,2,5);
+        matrix7.SetElement(1,3,7);
+        matrix7.SetElement(1,5,3);
+        matrix7.SetElement(2,1,4);
+        matrix7.SetElement(2,3,6);
+        matrix7.SetElement(3,3,9);
+        matrix7.SetElement(3,4,1);
+        matrix7.SetElement(3,5,8);
+        Console.WriteLine("matrix7:");
+        matrix7.Print();
+
+        Console.WriteLine();
+        Console.WriteLine("matrix7*vector1:");
+        matrix7.MultiplyByVector(vector1).Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("matrix7*vector1:");
+        matrix7.MultiplyByVector(vector1).Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("vector2*matrix7:");
+        vector2.MultiplyRowByMatrix(matrix7).Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("vector2*matrix7:");
+        vector2.MultiplyRowByMatrix(matrix7).Print();
+
+        Console.WriteLine();
+        Console.WriteLine("matrix7*matrix6:");
+        matrix7.MultiplyByMatrix(matrix6).Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("matrix6*matrix7:");
+        matrix6.MultiplyByMatrix(matrix7).Print();
+
         Console.ReadLine();
     }
 
