@@ -213,6 +213,40 @@ internal static class Program
         Console.WriteLine("matrix6*matrix7:");
         matrix6.MultiplyByMatrix(matrix7).Print();
 
+        Console.WriteLine();
+        var matrix8 = MatrixBuilder.CreateCsr(3, 3);
+        matrix8.SetElement(1, 1, 3);
+        matrix8.SetElement(1, 2, 4);
+        matrix8.SetElement(1, 3, 6);
+        matrix8.SetElement(2, 1, -2);
+        matrix8.SetElement(2, 2, 5);
+        matrix8.SetElement(2, 3, 17);
+        matrix8.SetElement(3, 1, 5);
+        matrix8.SetElement(3, 2, -1);
+        matrix8.SetElement(3, 3, 7);
+        Console.WriteLine("matrix8:");
+        matrix8.Print();
+
+        Console.WriteLine();
+        Console.WriteLine("matrix8.LuFactorize()...");
+        var LUP = matrix8.LuFactorize();
+        Console.WriteLine("L:");
+        LUP.L.Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("U:");
+        LUP.U.Print();
+
+        Console.WriteLine();
+        Console.WriteLine("P:");
+        foreach (var i in ((SparseLUCsr)LUP).P)
+            Console.Write($"{i} ");
+        Console.WriteLine();
+
+        Console.WriteLine();
+        Console.WriteLine("L*U:");
+        LUP.L.MultiplyByMatrix(LUP.U).Print();
+
         Console.ReadLine();
     }
 
