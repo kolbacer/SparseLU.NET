@@ -134,6 +134,23 @@ public partial class SparseMatrixCsr
         valueRows[iRow2] = tmpValueRow;
     }
 
+    /// <summary>
+    /// Поменять местами 2 столбца в матрице. Индексация с 1.
+    /// </summary>
+    /// <remarks>Сложность в худшем случае O(NumberOfNonzeroElements)</remarks>
+    public override void SwapColumns(stype col1, stype col2)
+    {
+        if (col1 < 1 || col1 > Columns || col2 < 1 || col2 > Columns)
+            throw new OutOfMatrixException();
+        
+        if (col1 == col2) return;
+
+        for (stype i = 0; i < Rows; ++i)
+        {
+            GetRowAsVector(i).SwapElements(col1, col2);
+        }
+    }
+
     public override SparseMatrixCsr Transposed()
     {
         var transposedStorage = new CsrStorage(Columns, Rows);

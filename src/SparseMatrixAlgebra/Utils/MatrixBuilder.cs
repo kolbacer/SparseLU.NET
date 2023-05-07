@@ -10,12 +10,12 @@ public static class MatrixBuilder
     /// </summary>
     /// <param name="rows">кол-во строк</param>
     /// <param name="cols">кол-во столбцов</param>
-    public static SparseMatrix<stype, vtype> CreateCsr(stype rows, stype cols)
+    public static SparseMatrixCsr CreateCsr(stype rows, stype cols)
     {
         return new SparseMatrixCsr(rows, cols);
     }
 
-    public static SparseMatrix<stype, vtype> ReadCsrFromFile(string filepath) => throw new NotImplementedException();
+    public static SparseMatrixCsr ReadCsrFromFile(string filepath) => throw new NotImplementedException();
 
     public static SparseVector CreateCsrVector(stype length)
     {

@@ -12,6 +12,7 @@ public abstract class SparseVector<TKey,TValue> : IVector<TKey,TValue>, ISparseS
     public abstract TKey NumberOfNonzeroElements { get; }
     public abstract TValue GetElement(TKey index);
     public abstract void SetElement(TKey index, TValue value);
+    public abstract void SwapElements(TKey index1, TKey index2);
     public abstract void Print();
     public abstract void Print(bool asColumn);
     public abstract void PrintStorage();

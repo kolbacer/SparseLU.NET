@@ -39,9 +39,14 @@ public abstract class SparseMatrix<TKey,TValue> : IMatrix<TKey,TValue,SparseMatr
     public abstract void AddRows(TKey augend, TKey addend);
     
     /// <summary>
-    /// Поменять местами 2 строки в матрице
+    /// Поменять местами 2 строки в матрице. Индексация с 1.
     /// </summary>
     public abstract void SwapRows(TKey row1, TKey row2);
+    
+    /// <summary>
+    /// Поменять местами 2 столбца в матрице. Индексация с 1.
+    /// </summary>
+    public abstract void SwapColumns(TKey col1, TKey col2);
 
     /// <summary>
     /// Создать транспонированную матрицу

@@ -72,4 +72,120 @@ public partial class SparseMatrixCsr
 
         return new SparseLUCsr(L, U, P);
     }
+
+    /// <summary>
+    /// LU-разложение с выбором ведущего элемента по стратегии Марковица
+    /// </summary>
+    /// <param name="u">Порог в диапазоне [0,1]</param>
+    public SparseLUCsr LuFactorizeMarkowitz(vtype u = 0.1)
+    {
+        if (Rows != Columns) throw new IncompatibleDimensionsException("Matrix must be square");
+        if (u is < 0 or > 1) throw new ArgumentException("u should be in range [0,1]");
+
+        SparseMatrixCsr L = new SparseMatrixCsr(Rows, Columns);
+        SparseMatrixCsr U = this.Copy();
+        stype[] P = new stype[Rows];
+        stype[] Q = new stype[Columns];
+        for (stype i = 0; i < Rows; ++i)
+        {
+            P[i] = i + 1;
+            Q[i] = i + 1;
+        }
+
+        stype[] countInRows = new stype[Rows];
+        stype[] countInColumns = new stype[Columns];
+        vtype?[] maxInColumns = new vtype?[Columns];
+        for (stype i = 0; i < Rows; ++i)
+        {
+            // counting
+            for (stype j = i; j < Rows; ++j)
+            {
+                countInRows[j] = 0;
+                countInColumns[j] = 0;
+                maxInColumns[j] = null;
+            }
+
+            for (stype j = i; j < Rows; ++j)
+            {
+                var rowVector = U.GetRowAsVector(j);
+                countInRows[j] = rowVector.NumberOfNonzeroElements;
+
+                for (stype k = 0; k < rowVector.NumberOfNonzeroElements; ++k)
+                {
+                    stype columnIndex = rowVector.GetIndexAt(k);
+                    vtype value = rowVector.GetValueAt(k);
+
+                    countInColumns[columnIndex]++;
+                    if (maxInColumns[columnIndex] == null || maxInColumns[columnIndex] < Math.Abs(value))
+                        maxInColumns[columnIndex] = Math.Abs(value);
+                }
+            }
+
+            // find pivot
+            stype? minMark = null;
+            stype pivotRow = i, pivotColumn = i;
+            vtype pivotValue = 0;
+            for (stype j = i; j < Rows; ++j)
+            {
+                var rowVector = U.GetRowAsVector(j);
+                for (stype k = 0; k < rowVector.NumberOfNonzeroElements; ++k)
+                {
+                    stype columnIndex = rowVector.GetIndexAt(k);
+                    vtype value = rowVector.GetValueAt(k);
+                    stype mark = (countInRows[j] - 1) * (countInColumns[columnIndex] - 1);
+
+                    if (Math.Abs(value) < u * maxInColumns[columnIndex]) continue; // check threshold
+
+                    if (minMark == null || mark < minMark)
+                    {
+                        minMark = mark;
+                        pivotRow = j;
+                        pivotColumn = columnIndex;
+                        pivotValue = value;
+                    }
+                }
+            }
+
+            if (minMark == null) throw new SingularMatrixException("Matrix must be non-singular");
+
+            // swap
+            if (pivotRow != i)
+            {
+                L.SwapRows(i + 1, pivotRow + 1);
+                U.SwapRows(i + 1, pivotRow + 1);
+                (P[i], P[pivotRow]) = (P[pivotRow], P[i]);
+            }
+
+            if (pivotColumn != i)
+            {
+                U.SwapColumns(i + 1, pivotColumn + 1);
+                (Q[i], Q[pivotColumn]) = (Q[pivotColumn], Q[i]);
+            }
+
+            // eliminate
+            for (stype j = i + 1; j < Rows; ++j)
+            {
+                var rowVectorL = L.GetRowAsVector(j);
+                var rowVectorU = U.GetRowAsVector(j);
+
+                Element firstElement = rowVectorU[0];
+                if (firstElement.Index == i)
+                {
+                    vtype coef = firstElement.Value / pivotValue;
+                    rowVectorL.AddIndex(i);
+                    rowVectorL.AddValue(coef);
+                    U.AddRows(j + 1, i + 1, -coef);
+                }
+            }
+        }
+
+        for (stype i = 0; i < Rows; ++i)
+        {
+            var rowVector = L.GetRowAsVector(i);
+            rowVector.AddIndex(i);
+            rowVector.AddValue(1);
+        }
+
+        return new SparseLUCsr(L, U, P, Q);
+    }
 }

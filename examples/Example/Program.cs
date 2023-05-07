@@ -72,6 +72,11 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine("Original matrix:");
         matrix1.Print();
+        
+        Console.WriteLine();
+        matrix1.SwapColumns(2,5);
+        Console.WriteLine("Swapped columns 2 and 5:");
+        matrix1.Print();
 
         Console.WriteLine();
         matrix1.SwapRows(3,5);
@@ -81,6 +86,11 @@ internal static class Program
         Console.WriteLine();
         matrix1.AddRows(2, 1, 2);
         Console.WriteLine("row2 += row1*2");
+        matrix1.Print();
+        
+        Console.WriteLine();
+        matrix1.SwapColumns(4,5);
+        Console.WriteLine("Swapped columns 4 and 5:");
         matrix1.Print();
         
         Console.WriteLine();
@@ -217,10 +227,10 @@ internal static class Program
         var matrix8 = MatrixBuilder.CreateCsr(3, 3);
         matrix8.SetElement(1, 1, 3);
         matrix8.SetElement(1, 2, 4);
-        matrix8.SetElement(1, 3, 6);
+        // matrix8.SetElement(1, 3, 6);
         matrix8.SetElement(2, 1, -2);
         matrix8.SetElement(2, 2, 5);
-        matrix8.SetElement(2, 3, 17);
+        // matrix8.SetElement(2, 3, 17);
         matrix8.SetElement(3, 1, 5);
         matrix8.SetElement(3, 2, -1);
         matrix8.SetElement(3, 3, 7);
@@ -239,13 +249,71 @@ internal static class Program
 
         Console.WriteLine();
         Console.WriteLine("P:");
-        foreach (var i in ((SparseLUCsr)LUP).P)
+        foreach (var i in LUP.P)
             Console.Write($"{i} ");
         Console.WriteLine();
 
         Console.WriteLine();
         Console.WriteLine("L*U:");
         LUP.L.MultiplyByMatrix(LUP.U).Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("matrix8.LuFactorizeMarkowitz()...");
+        var LUPQ = matrix8.LuFactorizeMarkowitz(0.001);
+        Console.WriteLine("L:");
+        LUPQ.L.Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("U:");
+        LUPQ.U.Print();
+
+        Console.WriteLine();
+        Console.WriteLine("P:");
+        foreach (var i in LUPQ.P)
+            Console.Write($"{i} ");
+        Console.WriteLine();
+        
+        Console.WriteLine();
+        Console.WriteLine("Q:");
+        foreach (var i in LUPQ.Q)
+            Console.Write($"{i} ");
+        Console.WriteLine();
+
+        Console.WriteLine();
+        Console.WriteLine("L*U:");
+        LUPQ.L.MultiplyByMatrix(LUPQ.U).Print();
+        
+        
+        Console.WriteLine();
+        var vector3 = MatrixBuilder.CreateCsrVector(18);
+        vector3.SetElement(3, 2);
+        vector3.SetElement(5, 1);
+        vector3.SetElement(7, 8);
+        vector3.SetElement(10, 7);
+        vector3.SetElement(13, 6);
+        vector3.SetElement(18, 3);
+        Console.WriteLine("Vector3:");
+        vector3.Print();
+        
+        Console.WriteLine();
+        vector3.SwapElements(5, 13);
+        Console.WriteLine("Vector3.SwapElements(5, 13):");
+        vector3.Print();
+        
+        Console.WriteLine();
+        vector3.SwapElements(6, 13);
+        Console.WriteLine("Vector3.SwapElements(6, 13):");
+        vector3.Print();
+        
+        Console.WriteLine();
+        vector3.SwapElements(6, 9);
+        Console.WriteLine("Vector3.SwapElements(6, 9):");
+        vector3.Print();
+        
+        Console.WriteLine();
+        vector3.SwapElements(10, 13);
+        Console.WriteLine("Vector3.SwapElements(10, 13):");
+        vector3.Print();
 
         Console.ReadLine();
     }
