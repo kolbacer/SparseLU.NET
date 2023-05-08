@@ -1,5 +1,6 @@
 ﻿using SparseMatrixAlgebra.Common.Exceptions;
 using SparseMatrixAlgebra.Common.Extensions;
+using SparseMatrixAlgebra.Common.Logging;
 using Element = SparseMatrixAlgebra.Sparse.CSR.SparseVector.Element;
 
 namespace SparseMatrixAlgebra.Sparse.CSR;
@@ -94,8 +95,16 @@ public partial class SparseMatrixCsr : SparseMatrix<stype,vtype>
     
     public override void Print()
     {
-        var logger = Common.Logging.Loggers.ConsoleLogger;
+        PrintToLogger(Loggers.ConsoleLogger);
+    }
 
+    public void PrintToFile()
+    {
+        PrintToLogger(Loggers.FileLogger);
+    }
+
+    private void PrintToLogger(Logger logger)
+    {
         for (stype i = 0; i < Rows; ++i)
         {
             string rowString = "";

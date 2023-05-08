@@ -21,6 +21,7 @@ public abstract class SparseMatrix<TKey,TValue> : IMatrix<TKey,TValue,SparseMatr
     public abstract SparseMatrix<TKey,TValue> Copy();
     
     public TKey NumberOfNonzeroElements { get => Storage.NumberOfNonzeroElements; }
+    public override string ToString() => $"{Rows}x{Columns} ({NumberOfNonzeroElements} nnz)";
     public void PrintStorage() => Storage.PrintStorage();
     
     /// <summary>
