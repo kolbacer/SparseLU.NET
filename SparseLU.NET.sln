@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "examples\Example
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparseMatrixAlgebra", "src\SparseMatrixAlgebra\SparseMatrixAlgebra.csproj", "{B90C1597-ECD7-433E-9872-ECE0C30FCEA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparseMatrixAlgebra.UnitTests", "tests\SparseMatrixAlgebra.UnitTests\SparseMatrixAlgebra.UnitTests.csproj", "{2BB46AF6-FBE9-47B5-86DE-E84F49C285EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{FA28D366-85E2-4B48-A3E2-5651094A4435} = {7565965A-480F-4F3F-A2D2-8392E6F37BD2}
 		{B90C1597-ECD7-433E-9872-ECE0C30FCEA0} = {17A0BD91-8753-4A4B-8C17-66964B95091E}
+		{2BB46AF6-FBE9-47B5-86DE-E84F49C285EF} = {E0A622F6-340E-48D1-B3BD-397513B570BC}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FA28D366-85E2-4B48-A3E2-5651094A4435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -28,5 +31,9 @@ Global
 		{B90C1597-ECD7-433E-9872-ECE0C30FCEA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B90C1597-ECD7-433E-9872-ECE0C30FCEA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B90C1597-ECD7-433E-9872-ECE0C30FCEA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB46AF6-FBE9-47B5-86DE-E84F49C285EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB46AF6-FBE9-47B5-86DE-E84F49C285EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB46AF6-FBE9-47B5-86DE-E84F49C285EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB46AF6-FBE9-47B5-86DE-E84F49C285EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

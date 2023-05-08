@@ -241,8 +241,8 @@ public partial class SparseMatrixCsr
         CsrStorage QStorage = new CsrStorage(Q.Length, Q.Length);
         for (stype i = 0; i < Q.Length; ++i)
         {
-            QStorage.ColumnIndexRows[i].Add(Q[i] - 1);
-            QStorage.ValueRows[i].Add(1);
+            QStorage.ColumnIndexRows[Q[i] - 1].Add(i);
+            QStorage.ValueRows[Q[i] - 1].Add(1);
         }
 
         return MultiplyByMatrix(new SparseMatrixCsr(QStorage));

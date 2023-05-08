@@ -4,7 +4,13 @@ public class SparseLUCsr : SparseLU<stype,vtype>
 {
     public override SparseMatrixCsr L { get; }
     public override SparseMatrixCsr U { get; }
+    /// <summary>
+    /// Перестановки строк
+    /// </summary>
     public stype[]? P { get; }
+    /// <summary>
+    /// Перестановки столбцов
+    /// </summary>
     public stype[]? Q { get; }
 
     public SparseLUCsr(SparseMatrixCsr L, SparseMatrixCsr U, stype[]? P = null, stype[]? Q = null)
