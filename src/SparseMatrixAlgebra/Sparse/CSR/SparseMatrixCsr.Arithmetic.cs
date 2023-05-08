@@ -188,7 +188,7 @@ public partial class SparseMatrixCsr
         return resultVector;
     }
     
-    public override SparseMatrix<stype, vtype> MultiplyByMatrix(SparseMatrix<stype, vtype> matrix)
+    public override SparseMatrixCsr MultiplyByMatrix(SparseMatrix<stype, vtype> matrix)
     {
         if (matrix is not SparseMatrixCsr) throw new IncompatibleTypeException("matrix must be SparseMatrixCsr");
         if (Columns != matrix.Rows) throw new IncompatibleDimensionsException();
@@ -210,5 +210,41 @@ public partial class SparseMatrixCsr
         return new SparseMatrixCsr(new CsrStorage(
             thisMatrix.Rows, otherMatrix.Columns, newColumnIndexRows, newValueRows)
         );
+    }
+
+    /// <summary>
+    /// Переставить строки, умножив P*A
+    /// </summary>
+    /// <param name="P">Перестановочная матрица в виде массива</param>
+    public SparseMatrixCsr PermuteRows(stype[] P)
+    {
+        if (P.Length != Rows) throw new ArgumentException("P.Length must be of the number of Rows");
+
+        CsrStorage newStorage = new CsrStorage(Rows, Columns);
+        for (stype i = 0; i < Rows; ++i)
+        {
+            newStorage.ColumnIndexRows[i] = new List<stype>(((CsrStorage)Storage).ColumnIndexRows[P[i] - 1]);
+            newStorage.ValueRows[i] = new List<vtype>(((CsrStorage)Storage).ValueRows[P[i] - 1]);
+        }
+
+        return new SparseMatrixCsr(newStorage);
+    }
+
+    /// <summary>
+    /// Переставить столбцы, умножив A*Q
+    /// </summary>
+    /// <param name="Q">Перестановочная матрица в виде массива</param>
+    public SparseMatrixCsr PermuteColumns(stype[] Q)
+    {
+        if (Q.Length != Columns) throw new ArgumentException("Q.Length must be of the number of Columns");
+
+        CsrStorage QStorage = new CsrStorage(Q.Length, Q.Length);
+        for (stype i = 0; i < Q.Length; ++i)
+        {
+            QStorage.ColumnIndexRows[i].Add(Q[i] - 1);
+            QStorage.ValueRows[i].Add(1);
+        }
+
+        return MultiplyByMatrix(new SparseMatrixCsr(QStorage));
     }
 }

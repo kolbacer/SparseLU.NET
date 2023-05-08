@@ -73,6 +73,24 @@ public partial class SparseMatrixCsr : SparseMatrix<stype,vtype>
         if (!value.IsZero()) 
             compressedRow.AddElement(new Element(iCol,value));
     }
+
+    /// <summary>
+    /// Сравнивает поэлементно 2 матрицы с точностью до eps
+    /// </summary>
+    public bool Equals(SparseMatrixCsr other)
+    {
+        if (this.Rows != other.Rows || this.Columns != other.Columns) return false;
+
+        for (stype i = 0; i < Rows; ++i)
+        {
+            var thisRow = this.GetRowAsVector(i);
+            var otherRow = other.GetRowAsVector(i);
+
+            if (!thisRow.Equals(otherRow)) return false;
+        }
+
+        return true;
+    }
     
     public override void Print()
     {

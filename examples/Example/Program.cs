@@ -187,15 +187,12 @@ internal static class Program
         vector2.MultiplyColumnByRow(vector1).Print();
 
         Console.WriteLine();
-        var matrix7 = MatrixBuilder.CreateCsr(3, 5);
-        matrix7.SetElement(1,2,5);
-        matrix7.SetElement(1,3,7);
-        matrix7.SetElement(1,5,3);
-        matrix7.SetElement(2,1,4);
-        matrix7.SetElement(2,3,6);
-        matrix7.SetElement(3,3,9);
-        matrix7.SetElement(3,4,1);
-        matrix7.SetElement(3,5,8);
+        var matrix7 = MatrixBuilder.CsrOfArray(new double[,]
+        {
+            { 0, 5, 7, 0, 3 },
+            { 4, 0, 6, 0, 0 },
+            { 0, 0, 9, 1, 8 }
+        });
         Console.WriteLine("matrix7:");
         matrix7.Print();
 
@@ -258,6 +255,10 @@ internal static class Program
         LUP.L.MultiplyByMatrix(LUP.U).Print();
         
         Console.WriteLine();
+        Console.WriteLine("P*A:");
+        matrix8.PermuteRows(LUP.P).Print();
+
+        Console.WriteLine();
         Console.WriteLine("matrix8.LuFactorizeMarkowitz()...");
         var LUPQ = matrix8.LuFactorizeMarkowitz(0.001);
         Console.WriteLine("L:");
@@ -282,6 +283,19 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine("L*U:");
         LUPQ.L.MultiplyByMatrix(LUPQ.U).Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("P*A*Q:");
+        matrix8.PermuteRows(LUPQ.P).PermuteColumns(LUPQ.Q).Print();
+        
+        Console.WriteLine();
+        Console.WriteLine("(P^-1)*L*U*(Q^-1):");
+        var origin = LUPQ.GetOrigin();
+        origin.Print();
+
+        Console.WriteLine();
+        Console.Write("matrix8 == LU.origin: ");
+        Console.WriteLine(origin.Equals(matrix8));
         
         
         Console.WriteLine();

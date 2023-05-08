@@ -1,4 +1,5 @@
-﻿using SparseMatrixAlgebra.Common.Exceptions;
+﻿using SparseMatrixAlgebra.Common;
+using SparseMatrixAlgebra.Common.Exceptions;
 using SparseMatrixAlgebra.Common.Extensions;
 
 namespace SparseMatrixAlgebra.Sparse.CSR;
@@ -58,6 +59,22 @@ public partial class SparseVector : SparseVector<stype, vtype>
         }
         if (!value.IsZero()) 
             AddElement(new Element(iIndex,value));
+    }
+
+    /// <summary>
+    /// Сравнивает 2 вектора поэлементно с точностью до eps
+    /// </summary>
+    public bool Equals(SparseVector other)
+    {
+        if (this.Length != other.Length || this.NumberOfNonzeroElements != other.NumberOfNonzeroElements) return false;
+
+        for (stype i = 0; i < NumberOfNonzeroElements; ++i)
+        {
+            if (this.GetIndexAt(i) != other.GetIndexAt(i)) return false;
+            if (!(this.GetValueAt(i) - other.GetValueAt(i)).IsZero()) return false;
+        }
+
+        return true;
     }
 
     public override void Print() => Print(IsColumn);
