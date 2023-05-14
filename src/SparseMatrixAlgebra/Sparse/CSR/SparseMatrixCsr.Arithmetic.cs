@@ -247,4 +247,40 @@ public partial class SparseMatrixCsr
 
         return MultiplyByMatrix(new SparseMatrixCsr(QStorage));
     }
+
+    /// <summary>
+    /// Переставить столбцы в соответствии с перестановкой Q.
+    /// НЕ создает копию хранилища.
+    /// </summary>
+    /// <param name="Q">Перестановочная матрица в виде массива</param>
+    public SparseMatrixCsr PermuteColumnsFast(stype[] Q)
+    {
+        if (Q.Length != Columns) throw new ArgumentException("Q.Length must be of the number of Columns");
+
+        List<List<stype>> columnIndexRows = ((CsrStorage)Storage).ColumnIndexRows;
+        List<List<vtype>> valueRows = ((CsrStorage)Storage).ValueRows;
+
+        stype[] inversedQ = new stype[Q.Length];
+        for (stype i = 0; i < Q.Length; ++i)
+            inversedQ[Q[i] - 1] = i + 1;
+        
+        for (stype i = 0; i < Rows; ++i)
+        {
+            stype[] indexArray = columnIndexRows[i].ToArray();
+            vtype[] valueArray = valueRows[i].ToArray();
+
+            for (int j = 0; j < indexArray.Length; ++j)
+                indexArray[j] = inversedQ[indexArray[j]] - 1;
+
+            Array.Sort(indexArray, valueArray);
+            
+            columnIndexRows[i].Clear();
+            columnIndexRows[i].AddRange(indexArray);
+
+            valueRows[i].Clear();
+            valueRows[i].AddRange(valueArray);
+        }
+
+        return this;
+    }
 }

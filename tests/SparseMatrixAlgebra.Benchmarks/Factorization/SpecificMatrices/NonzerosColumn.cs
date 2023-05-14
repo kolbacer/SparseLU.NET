@@ -18,22 +18,28 @@ public class NonzerosColumn : IColumn
     }
     
     public bool IsDefault(Summary summary, BenchmarkCase benchmarkCase) => false;
-
+    
     public string GetValue(Summary summary, BenchmarkCase benchmarkCase)
     {
         var factorizationTestRun = (FactorizationTestRun)
             benchmarkCase.Parameters.GetArgument("TestMatrix").Value;
 
         if (init)
-            return factorizationTestRun.InitNonzeros.ToString();
+            return factorizationTestRun.Matrix.NumberOfNonzeroElements.ToString();
         else
         {
-            return benchmarkCase.Descriptor.MethodIndex switch
+            string resultDirectory = SpecificMatricesFactorizationBenchmark.ResultDirectory;
+            string matrixName = factorizationTestRun.Title;
+            string? filename = benchmarkCase.Descriptor.MethodIndex switch
             {
-                0 => factorizationTestRun.ResultNonzeros.ToString(),
-                1 => factorizationTestRun.ResultNonzerosMarkowitz.ToString(),
-                _ => "unknown method"
+                0 => $"{resultDirectory}\\nonzeros.csrlufactorization.{matrixName}.txt",
+                1 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitz.{matrixName}.txt",
+                2 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitz2.{matrixName}.txt",
+                _ => null
             };
+
+            if (filename == null) return "unknown method";
+            return File.Exists(filename) ? File.ReadAllText(filename) : "no file";
         }
     }
     

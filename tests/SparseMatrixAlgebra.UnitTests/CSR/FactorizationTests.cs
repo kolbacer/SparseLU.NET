@@ -26,6 +26,14 @@ public class Tests
         Assert.True(factorized.GetOrigin().Equals(matrix));
     }
     
+    [TestCaseSource(nameof(TestMatrices))]
+    public void CsrLuFactorizedMarkowitz2MatrixShouldBeEqualOrigin(SparseMatrixCsr matrix)
+    {
+        var factorized = matrix.LuFactorizeMarkowitz2(0.001);
+        
+        Assert.True(factorized.GetOrigin().Equals(matrix));
+    }
+    
     public static object[] TestMatrices =
     {
         MatrixBuilder.CsrOfArray(new double[,] 

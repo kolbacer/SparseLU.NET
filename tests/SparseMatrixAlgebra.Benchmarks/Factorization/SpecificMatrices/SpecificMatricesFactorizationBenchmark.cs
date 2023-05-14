@@ -2,10 +2,12 @@
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Reports;
+using SparseMatrixAlgebra.Sparse.CSR;
 using SparseMatrixAlgebra.Utils;
 
 namespace SparseMatrixAlgebra.Benchmarks.Factorization.SpecificMatrices;
 
+[DryJob] // запускать 1 раз
 [MemoryDiagnoser]
 [RPlotExporter] // Должен быть установлен R и добавлен в PATH
 [Config(typeof(Config))]
@@ -18,38 +20,70 @@ public class SpecificMatricesFactorizationBenchmark
         {
             SummaryStyle =
                 SummaryStyle.Default
-                    .WithRatioStyle(RatioStyle.Percentage)
-                    .WithTimeUnit(Perfolizer.Horology.TimeUnit.Millisecond);
+                    .WithRatioStyle(RatioStyle.Percentage);
+                    // .WithTimeUnit(Perfolizer.Horology.TimeUnit.Millisecond);
             AddColumn(new NonzerosColumn("Init Nonzeros", true));
             AddColumn(new NonzerosColumn("Total (L+U) Nonzeros", false));
         }
     }
 
+    private SparseLUCsr resultLU;
+    private string resultFile;
+
+    [GlobalSetup]
+    public void ResultDirectorySetup()
+    {
+        if (!Directory.Exists(ResultDirectory))
+        {
+            Directory.CreateDirectory(ResultDirectory);
+        }
+    }
+    
+    [GlobalCleanup]
+    public void WriteFileCleanup()
+    {
+        File.WriteAllText(resultFile,
+            (resultLU.L.NumberOfNonzeroElements + resultLU.U.NumberOfNonzeroElements).ToString());
+    }
+
     // absolute path for test matrices folder
-    private readonly string _matrixDirectory =
+    public const string MatrixDirectory =
         "D:\\Workspace\\SparseLU.NET\\tests\\SparseMatrixAlgebra.Benchmarks\\TestFiles\\SpecificMatrices";
+
+    // absolute path for resulting nonzero folder
+    public const string ResultDirectory = $"{MatrixDirectory}\\results";
 
     public IEnumerable<object> TestMatrices()
     {
         yield return new FactorizationTestRun("west2021", 
-            MatrixBuilder.ReadCsrFromFile($"{_matrixDirectory}\\west2021.mtx"));
+            MatrixBuilder.ReadCsrFromFile($"{MatrixDirectory}\\west2021.mtx"));
         yield return new FactorizationTestRun("add20",
-            MatrixBuilder.ReadCsrFromFile($"{_matrixDirectory}\\add20.mtx"));
+            MatrixBuilder.ReadCsrFromFile($"{MatrixDirectory}\\add20.mtx"));
         yield return new FactorizationTestRun("circuit_1",
-            MatrixBuilder.ReadCsrFromFile($"{_matrixDirectory}\\circuit_1.mtx"));
+            MatrixBuilder.ReadCsrFromFile($"{MatrixDirectory}\\circuit_1.mtx"));
     }
 
-    [Benchmark] // (OperationsPerInvoke = 2)
+    [Benchmark] // (OperationsPerInvoke = 10)
     [ArgumentsSource(nameof(TestMatrices))]
-    public object CsrLuFactorization(FactorizationTestRun TestMatrix)
-    { 
-        return TestMatrix.Matrix.LuFactorize();
+    public void CsrLuFactorization(FactorizationTestRun TestMatrix)
+    {
+        resultLU = TestMatrix.Matrix.LuFactorize();
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorization.{TestMatrix.Title}.txt";
     }
 
     [Benchmark(Baseline = true)] // (OperationsPerInvoke = 10)
     [ArgumentsSource(nameof(TestMatrices))]
-    public object CsrLuFactorizationMarkowitz(FactorizationTestRun TestMatrix)
+    public void CsrLuFactorizationMarkowitz(FactorizationTestRun TestMatrix)
     {
-        return TestMatrix.Matrix.LuFactorizeMarkowitz(0.001);
+        resultLU = TestMatrix.Matrix.LuFactorizeMarkowitz(0.001);
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitz.{TestMatrix.Title}.txt";
+    }
+    
+    [Benchmark] // (OperationsPerInvoke = 10)
+    [ArgumentsSource(nameof(TestMatrices))]
+    public void CsrLuFactorizationMarkowitz2(FactorizationTestRun TestMatrix)
+    {
+        resultLU = TestMatrix.Matrix.LuFactorizeMarkowitz2(0.001);
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitz2.{TestMatrix.Title}.txt";
     }
 }
