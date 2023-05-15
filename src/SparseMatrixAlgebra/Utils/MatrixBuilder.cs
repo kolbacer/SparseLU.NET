@@ -131,6 +131,38 @@ public static class MatrixBuilder
         return matrix;
     }
 
+    /// <summary>
+    /// Сгенерировать случаную матрицу заданного размера в формате CSR.
+    /// Элементы распределены равномерно, значения в диапазоне [1,2).
+    /// Диагональ гарантированно заполнена.
+    /// </summary>
+    /// <param name="rows">Кол-во строк</param>
+    /// <param name="cols">Кол-во столбцов</param>
+    /// <param name="fill">Приблизительное кол-во ненулевых элементов</param>
+    /// <param name="seed">Инициализатор для генератора</param>
+    public static SparseMatrixCsr GenerateRandomCsr(stype rows, stype cols, stype fill, int? seed = null)
+    {
+        SparseMatrixCsr matrix = new SparseMatrixCsr(rows, cols);
+        
+        Random rnd = (seed != null) ? new Random(seed.Value) : new Random();
+        stype bound = (rows < cols) ? rows : cols;
+        
+        for (stype i = 0; i < fill - bound; ++i)
+        {
+            stype row = rnd.Next(rows);
+            stype col = rnd.Next(cols);
+            vtype value = (vtype)rnd.NextDouble() + 1;
+            matrix.SetElement(row + 1, col + 1, value);
+        }
+
+        for (stype i = 0; i < bound; ++i)
+        {
+            matrix.SetElement(i + 1, i + 1, (vtype)rnd.NextDouble() + 1);
+        }
+
+        return matrix;
+    }
+
     public static SparseVector CreateCsrVector(stype length)
     {
         return new SparseVector(length);

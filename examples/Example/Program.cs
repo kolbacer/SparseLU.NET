@@ -14,6 +14,7 @@ internal static class Program
         BasicMethods.Run();
         Factorization.Run();
         MatrixFromFile.Run();
+        RandomMatrixGeneration.Run();
 
         Console.ReadLine();
     }
