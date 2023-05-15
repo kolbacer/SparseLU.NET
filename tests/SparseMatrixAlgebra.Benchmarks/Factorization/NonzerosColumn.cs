@@ -1,8 +1,10 @@
 ﻿using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
+using SparseMatrixAlgebra.Benchmarks.Factorization.RandomMatrices;
+using SparseMatrixAlgebra.Benchmarks.Factorization.SpecificMatrices;
 
-namespace SparseMatrixAlgebra.Benchmarks.Factorization.SpecificMatrices;
+namespace SparseMatrixAlgebra.Benchmarks.Factorization;
 
 public class NonzerosColumn : IColumn
 {
@@ -21,15 +23,35 @@ public class NonzerosColumn : IColumn
     
     public string GetValue(Summary summary, BenchmarkCase benchmarkCase)
     {
-        var factorizationTestRun = (FactorizationTestRun)
-            benchmarkCase.Parameters.GetArgument("TestMatrix").Value;
+        ITestRun testRun = null;
+        if (benchmarkCase.Descriptor.Type == typeof(SpecificMatricesFactorizationBenchmark))
+            testRun = (FactorizationTestRun)benchmarkCase.Parameters.GetArgument("TestMatrix").Value;
+        else if (benchmarkCase.Descriptor.Type == typeof(RandomMatricesFactorizationBenchmark))
+            testRun = (RandomTestRun)benchmarkCase.Parameters.GetArgument("TestMatrix").Value;
+
 
         if (init)
-            return factorizationTestRun.Matrix.NumberOfNonzeroElements.ToString();
+        {
+            if (testRun.Case == "specific")
+                return ((FactorizationTestRun)testRun).Matrix.NumberOfNonzeroElements.ToString();
+            else if (testRun.Case == "random")
+            {
+                int totalNonzeros = 0;
+                var MatrixArray = ((RandomTestRun)testRun).MatrixArray;
+                for (int i = 0; i < MatrixArray.Length; ++i)
+                    totalNonzeros += MatrixArray[i].NumberOfNonzeroElements;
+                return (totalNonzeros / MatrixArray.Length).ToString();
+            }
+            else return "?";
+        }
         else
         {
-            string resultDirectory = SpecificMatricesFactorizationBenchmark.ResultDirectory;
-            string matrixName = factorizationTestRun.Title;
+            string resultDirectory = null;
+            if (benchmarkCase.Descriptor.Type == typeof(SpecificMatricesFactorizationBenchmark))
+                resultDirectory = SpecificMatricesFactorizationBenchmark.ResultDirectory;
+            else if (benchmarkCase.Descriptor.Type == typeof(RandomMatricesFactorizationBenchmark))
+                resultDirectory = RandomMatricesFactorizationBenchmark.ResultDirectory;
+            string matrixName = testRun.Title;
             string? filename = benchmarkCase.Descriptor.MethodIndex switch
             {
                 0 => $"{resultDirectory}\\nonzeros.csrlufactorization.{matrixName}.txt",

@@ -5,10 +5,12 @@ namespace SparseMatrixAlgebra.Benchmarks.Factorization.SpecificMatrices;
 /// <summary>
 /// Класс-обертка для тестовых матриц.
 /// </summary>
-public class FactorizationTestRun
+public class FactorizationTestRun: ITestRun
 {
     public readonly SparseMatrixCsr Matrix;
     public string Title { get; set; }
+
+    public string Case { get; } = "specific";
 
     public FactorizationTestRun(string title, SparseMatrixCsr matrix)
     {

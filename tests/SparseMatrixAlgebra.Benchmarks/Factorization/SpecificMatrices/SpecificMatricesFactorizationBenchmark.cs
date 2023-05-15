@@ -7,7 +7,6 @@ using SparseMatrixAlgebra.Utils;
 
 namespace SparseMatrixAlgebra.Benchmarks.Factorization.SpecificMatrices;
 
-[DryJob] // запускать 1 раз
 [MemoryDiagnoser]
 [RPlotExporter] // Должен быть установлен R и добавлен в PATH
 [Config(typeof(Config))]
@@ -63,7 +62,7 @@ public class SpecificMatricesFactorizationBenchmark
             MatrixBuilder.ReadCsrFromFile($"{MatrixDirectory}\\circuit_1.mtx"));
     }
 
-    [Benchmark] // (OperationsPerInvoke = 10)
+    [Benchmark(Baseline = true)]
     [ArgumentsSource(nameof(TestMatrices))]
     public void CsrLuFactorization(FactorizationTestRun TestMatrix)
     {
@@ -71,7 +70,7 @@ public class SpecificMatricesFactorizationBenchmark
         resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorization.{TestMatrix.Title}.txt";
     }
 
-    [Benchmark(Baseline = true)] // (OperationsPerInvoke = 10)
+    [Benchmark]
     [ArgumentsSource(nameof(TestMatrices))]
     public void CsrLuFactorizationMarkowitz(FactorizationTestRun TestMatrix)
     {
@@ -79,7 +78,7 @@ public class SpecificMatricesFactorizationBenchmark
         resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitz.{TestMatrix.Title}.txt";
     }
     
-    [Benchmark] // (OperationsPerInvoke = 10)
+    [Benchmark]
     [ArgumentsSource(nameof(TestMatrices))]
     public void CsrLuFactorizationMarkowitz2(FactorizationTestRun TestMatrix)
     {
