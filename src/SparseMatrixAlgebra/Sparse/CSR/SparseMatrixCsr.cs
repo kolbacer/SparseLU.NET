@@ -92,6 +92,39 @@ public partial class SparseMatrixCsr : SparseMatrix<stype,vtype>
 
         return true;
     }
+
+    /// <summary>
+    /// Получить шаблон разреженности матрицы
+    /// </summary>
+    /// <param name="n">размерность шаблона</param>
+    public double[,] GetSparsityPattern(uint n)
+    {
+        if (Rows != Columns) throw new IncompatibleDimensionsException("Matrix must be square");
+        if (n > Rows) throw new ArgumentException("n must be <= Rows/Columns");
+        if (n == 0) return new double[0,0];
+
+        double[,] pattern = new double[n, n];
+        int bucketSize = (int)Math.Ceiling((double)Rows / (double)n);
+        int elementsInBucket = bucketSize * bucketSize;
+
+        for (stype i = 0; i < Rows; ++i)
+        {
+            int iBucket = (int)Math.Ceiling((double)(i + 1) / ((double)Rows / (double)n)) - 1;
+            var rowVector = GetRowAsVector(i);
+            for (stype j = 0; j < rowVector.NumberOfNonzeroElements; ++j)
+            {
+                stype column = rowVector.GetIndexAt(j);
+                int jBucket = (int)Math.Ceiling((double)(column + 1) / ((double)Columns / (double)n)) - 1;
+                pattern[iBucket, jBucket]++;
+            }
+        }
+        
+        for (int i = 0; i < pattern.GetLength(0); ++i) 
+        for (int j = 0; j < pattern.GetLength(1); ++j)
+            pattern[i, j] /= elementsInBucket;
+        
+        return pattern;
+    }
     
     public override void Print()
     {

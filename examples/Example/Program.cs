@@ -15,6 +15,7 @@ internal static class Program
         Factorization.Run();
         MatrixFromFile.Run();
         RandomMatrixGeneration.Run();
+        SparsityPattern.Run();
 
         Console.ReadLine();
     }
