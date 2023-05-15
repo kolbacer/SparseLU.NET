@@ -286,26 +286,14 @@ public partial class SparseMatrixCsr
                 var rowVectorL = L.GetRowAsVector(j);
                 var rowVectorU = U.GetRowAsVector(j);
 
-                vtype valueToDivide = 0;
-                for (stype k = 0; k < rowVectorU.NumberOfNonzeroElements; ++k)
-                {
-                    stype columnIndex = rowVectorU.GetIndexAt(k);
-                    if (columnIndex == pivotColumn)
-                    {
-                        valueToDivide = rowVectorU.GetValueAt(k);
-                        break;
-                    }
-                    else if (columnIndex > pivotColumn)
-                        break;
-                }
+                int indexToDivide = rowVectorU.Indices.BinarySearch(pivotColumn);
+                if (indexToDivide < 0) continue;
+                vtype valueToDivide = rowVectorU.GetValueAt(indexToDivide);
                 
-                if (valueToDivide != 0)
-                {
-                    vtype coef = valueToDivide / pivotValue;
-                    rowVectorL.AddIndex(i);
-                    rowVectorL.AddValue(coef);
-                    U.AddRows(j + 1, i + 1, -coef);
-                }
+                vtype coef = valueToDivide / pivotValue;
+                rowVectorL.AddIndex(i);
+                rowVectorL.AddValue(coef);
+                U.AddRows(j + 1, i + 1, -coef);
             }
 
             eliminatedColumns[pivotColumn] = true;
