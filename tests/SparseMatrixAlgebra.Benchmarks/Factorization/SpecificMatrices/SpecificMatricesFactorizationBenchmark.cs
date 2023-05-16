@@ -8,7 +8,7 @@ using SparseMatrixAlgebra.Utils;
 namespace SparseMatrixAlgebra.Benchmarks.Factorization.SpecificMatrices;
 
 [MemoryDiagnoser]
-[RPlotExporter] // Должен быть установлен R и добавлен в PATH
+// [RPlotExporter] // Должен быть установлен R и добавлен в PATH
 [Config(typeof(Config))]
 [HideColumns(Column.Gen0, Column.Gen1, Column.Gen2)]
 public class SpecificMatricesFactorizationBenchmark
@@ -84,5 +84,29 @@ public class SpecificMatricesFactorizationBenchmark
     {
         resultLU = TestMatrix.Matrix.LuFactorizeMarkowitz2(0.001);
         resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitz2.{TestMatrix.Title}.txt";
+    }
+    
+    [Benchmark]
+    [ArgumentsSource(nameof(TestMatrices))]
+    public void CsrLuFactorizationParallel(FactorizationTestRun TestMatrix)
+    {
+        resultLU = TestMatrix.Matrix.LuFactorizeParallel();
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationparallel.{TestMatrix.Title}.txt";
+    }
+
+    [Benchmark]
+    [ArgumentsSource(nameof(TestMatrices))]
+    public void CsrLuFactorizationMarkowitzParallel(FactorizationTestRun TestMatrix)
+    {
+        resultLU = TestMatrix.Matrix.LuFactorizeMarkowitzParallel(0.001);
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitzparallel.{TestMatrix.Title}.txt";
+    }
+    
+    [Benchmark]
+    [ArgumentsSource(nameof(TestMatrices))]
+    public void CsrLuFactorizationMarkowitz2Parallel(FactorizationTestRun TestMatrix)
+    {
+        resultLU = TestMatrix.Matrix.LuFactorizeMarkowitz2Parallel(0.001);
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitz2parallel.{TestMatrix.Title}.txt";
     }
 }

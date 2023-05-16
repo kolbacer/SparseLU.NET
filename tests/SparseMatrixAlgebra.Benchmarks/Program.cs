@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 using SparseMatrixAlgebra.Benchmarks.Factorization.RandomMatrices;
+using SparseMatrixAlgebra.Benchmarks.Factorization.SpecificMatrices;
 
 namespace SparseMatrixAlgebra.Benchmarks;
 

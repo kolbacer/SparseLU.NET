@@ -57,6 +57,9 @@ public class NonzerosColumn : IColumn
                 0 => $"{resultDirectory}\\nonzeros.csrlufactorization.{matrixName}.txt",
                 1 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitz.{matrixName}.txt",
                 2 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitz2.{matrixName}.txt",
+                3 => $"{resultDirectory}\\nonzeros.csrlufactorizationparallel.{matrixName}.txt",
+                4 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitzparallel.{matrixName}.txt",
+                5 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitz2parallel.{matrixName}.txt",
                 _ => null
             };
 

@@ -34,6 +34,30 @@ public class Tests
         Assert.True(factorized.GetOrigin().Equals(matrix));
     }
     
+    [TestCaseSource(nameof(TestMatrices))]
+    public void CsrLuFactorizedParallelMatrixShouldBeEqualOrigin(SparseMatrixCsr matrix)
+    {
+        var factorized = matrix.LuFactorizeParallel();
+        
+        Assert.True(factorized.GetOrigin().Equals(matrix));
+    }
+    
+    [TestCaseSource(nameof(TestMatrices))]
+    public void CsrLuFactorizedMarkowitzParallelMatrixShouldBeEqualOrigin(SparseMatrixCsr matrix)
+    {
+        var factorized = matrix.LuFactorizeMarkowitzParallel(0.001);
+        
+        Assert.True(factorized.GetOrigin().Equals(matrix));
+    }
+    
+    [TestCaseSource(nameof(TestMatrices))]
+    public void CsrLuFactorizedMarkowitz2ParallelMatrixShouldBeEqualOrigin(SparseMatrixCsr matrix)
+    {
+        var factorized = matrix.LuFactorizeMarkowitz2Parallel(0.001);
+        
+        Assert.True(factorized.GetOrigin().Equals(matrix));
+    }
+    
     public static object[] TestMatrices =
     {
         MatrixBuilder.CsrOfArray(new double[,] 
