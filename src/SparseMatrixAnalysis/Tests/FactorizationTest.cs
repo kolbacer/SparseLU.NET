@@ -36,7 +36,6 @@ public static class FactorizationTest
         var plotViewLU = new SparsityPatternPlotView();
         plotLU.DataContext = plotViewLU;
         plotLU.Resources.Add("FactorizationTitle", windowTitle);
-        plot.DataContext = plotViewLU;
         var modelL = GetSparsityPatternPlotModelOfMatrix(LU.L);
         plotViewLU.SparsityPatternModelL = modelL;
         var modelU = GetSparsityPatternPlotModelOfMatrix(LU.U);
@@ -54,7 +53,6 @@ public static class FactorizationTest
         var plotViewLUMarkowitz = new SparsityPatternPlotView();
         plotLUMarkowitz.DataContext = plotViewLUMarkowitz;
         plotLUMarkowitz.Resources.Add("FactorizationTitle", windowTitleMarkowitz);
-        plot.DataContext = plotViewLUMarkowitz;
         var modelLMarkowitz = GetSparsityPatternPlotModelOfMatrix(LU.L);
         plotViewLUMarkowitz.SparsityPatternModelL = modelLMarkowitz;
         var modelUMarkowitz = GetSparsityPatternPlotModelOfMatrix(LU.U);
