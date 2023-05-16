@@ -6,8 +6,22 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:SparseMatrixAnalysis.Plots"
         mc:Ignorable="d"
-        Title="SparsityPatternPlot" Height="650" Width="700">
+        Title="SparsityPatternPlot" Height="700" Width="700">
     <Grid>
-        <oxy:PlotView Model="{Binding SparsityPatternModel}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <oxy:PlotView Grid.Row="1" Grid.Column="0" Model="{Binding SparsityPatternModel}" />
+        <TextBlock Text="{DynamicResource SizeCaption}" Grid.Row="2" Grid.Column="0"
+                   FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="{DynamicResource NonzerosCaption}" Grid.Row="3" Grid.Column="0"
+                   FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

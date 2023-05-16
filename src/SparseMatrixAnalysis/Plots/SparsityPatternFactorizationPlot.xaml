@@ -6,19 +6,32 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:SparseMatrixAnalysis.Plots"
         mc:Ignorable="d"
-        Title="SparsityPatternPlot" Height="650" Width="1400">
+        Title="SparsityPatternPlot" Height="750" Width="1400">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="{DynamicResource FactorizationTitle}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+        <TextBlock Text="{DynamicResource FactorizationTitle}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                    FontSize="18" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <oxy:PlotView Model="{Binding SparsityPatternModelL}" Grid.Row="1" Grid.Column="0" />
-        <oxy:PlotView Model="{Binding SparsityPatternModelU}" Grid.Row="1" Grid.Column="1" />
+        <oxy:PlotView Model="{Binding SparsityPatternModelL}" Grid.Row="2" Grid.Column="0" />
+        <oxy:PlotView Model="{Binding SparsityPatternModelU}" Grid.Row="2" Grid.Column="1" />
+        <TextBlock Text="{DynamicResource NonzerosLCaption}" Grid.Row="3" Grid.Column="0"
+                   FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="{DynamicResource NonzerosUCaption}" Grid.Row="3" Grid.Column="1"
+                   FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="{DynamicResource NonzerosTotalCaption}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                   FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Text="{DynamicResource FactorizationTimeCaption}" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                   FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

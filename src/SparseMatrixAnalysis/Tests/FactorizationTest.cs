@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -22,6 +24,8 @@ public static class FactorizationTest
         var plot = new SparsityPatternPlot();
         var plotView = new SparsityPatternPlotView();
         plot.DataContext = plotView;
+        plot.Resources.Add("SizeCaption", $"Размер матрицы: {matrix.Rows}x{matrix.Columns}");
+        plot.Resources.Add("NonzerosCaption", $"Количество ненулевых элементов: {matrix.NumberOfNonzeroElements}");
         var model = GetSparsityPatternPlotModelOfMatrix(matrix);
         plotView.SparsityPatternModel = model;
         model.Title = $"Шаблон разреженности матрицы {matrixMame}";
@@ -31,11 +35,26 @@ public static class FactorizationTest
 
         string windowTitle = $"LU-разложение матрицы {matrixMame} (выбор ведущего элемента по столбцу)";
 
-        var LU = matrix.LuFactorize();
+        var timer = new Stopwatch();
+        
+        timer.Start();
+        var LU = matrix.LuFactorizeParallel();
+        timer.Stop();
+        TimeSpan elapsed = timer.Elapsed;
+        string timeString = 
+            (elapsed.Hours != 0) ? $"{elapsed.Hours}ч {elapsed.Minutes}м {elapsed.Seconds}с {elapsed.Milliseconds}мс" :
+            (elapsed.Minutes != 0) ? $"{elapsed.Minutes}м {elapsed.Seconds}с {elapsed.Milliseconds}мс" :
+            (elapsed.Seconds != 0) ? $"{elapsed.Seconds}с {elapsed.Milliseconds}мс" :
+            $"{elapsed.Milliseconds}мс";
+        string factorizationTimeCaption = "Время работы метода LuFactorizeParallel(): " + timeString;
         var plotLU = new SparsityPatternFactorizationPlot();
         var plotViewLU = new SparsityPatternPlotView();
         plotLU.DataContext = plotViewLU;
         plotLU.Resources.Add("FactorizationTitle", windowTitle);
+        plotLU.Resources.Add("FactorizationTimeCaption", factorizationTimeCaption);
+        plotLU.Resources.Add("NonzerosLCaption", $"Кол-во ненулевых элементов: {LU.L.NumberOfNonzeroElements}");
+        plotLU.Resources.Add("NonzerosUCaption", $"Кол-во ненулевых элементов: {LU.U.NumberOfNonzeroElements}");
+        plotLU.Resources.Add("NonzerosTotalCaption", $"Общее кол-во ненулевых элементов: {LU.L.NumberOfNonzeroElements + LU.U.NumberOfNonzeroElements}");
         var modelL = GetSparsityPatternPlotModelOfMatrix(LU.L);
         plotViewLU.SparsityPatternModelL = modelL;
         var modelU = GetSparsityPatternPlotModelOfMatrix(LU.U);
@@ -48,11 +67,26 @@ public static class FactorizationTest
         
         string windowTitleMarkowitz = $"LU-разложение матрицы {matrixMame} (выбор ведущего элемента по стратегии Марковица)";
         
-        LU = matrix.LuFactorizeMarkowitz2(0.001);
+        timer.Reset();
+        
+        timer.Start();
+        LU = matrix.LuFactorizeMarkowitz2Parallel(0.001);
+        timer.Stop();
+        elapsed = timer.Elapsed;
+        timeString = 
+            (elapsed.Hours != 0) ? $"{elapsed.Hours}ч {elapsed.Minutes}м {elapsed.Seconds}с {elapsed.Milliseconds}мс" :
+            (elapsed.Minutes != 0) ? $"{elapsed.Minutes}м {elapsed.Seconds}с {elapsed.Milliseconds}мс" :
+            (elapsed.Seconds != 0) ? $"{elapsed.Seconds}с {elapsed.Milliseconds}мс" :
+            $"{elapsed.Milliseconds}мс";
+        string factorizationMarkowitzTimeCaption = "Время работы метода LuFactorizeMarkowitz2Parallel(): " + timeString;
         var plotLUMarkowitz = new SparsityPatternFactorizationPlot();
         var plotViewLUMarkowitz = new SparsityPatternPlotView();
         plotLUMarkowitz.DataContext = plotViewLUMarkowitz;
         plotLUMarkowitz.Resources.Add("FactorizationTitle", windowTitleMarkowitz);
+        plotLUMarkowitz.Resources.Add("FactorizationTimeCaption", factorizationMarkowitzTimeCaption);
+        plotLUMarkowitz.Resources.Add("NonzerosLCaption", $"Кол-во ненулевых элементов: {LU.L.NumberOfNonzeroElements}");
+        plotLUMarkowitz.Resources.Add("NonzerosUCaption", $"Кол-во ненулевых элементов: {LU.U.NumberOfNonzeroElements}");
+        plotLUMarkowitz.Resources.Add("NonzerosTotalCaption", $"Общее кол-во ненулевых элементов: {LU.L.NumberOfNonzeroElements + LU.U.NumberOfNonzeroElements}");
         var modelLMarkowitz = GetSparsityPatternPlotModelOfMatrix(LU.L);
         plotViewLUMarkowitz.SparsityPatternModelL = modelLMarkowitz;
         var modelUMarkowitz = GetSparsityPatternPlotModelOfMatrix(LU.U);
