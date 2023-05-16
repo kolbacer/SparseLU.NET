@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SparseMatrixAlgebra\SparseMatrixAlgebra.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
+    </ItemGroup>
+
+</Project>
