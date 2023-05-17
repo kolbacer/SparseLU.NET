@@ -28,11 +28,21 @@ namespace SparseMatrixAnalysis
             ResolutionTextBox.Text = "100";
         }
         
-        private void RunButton_Click(object sender, RoutedEventArgs e)
+        private void RunSparsityPatternAnalyzerButton_Click(object sender, RoutedEventArgs e)
         {
-            FactorizationTest.resolution = UInt32.Parse(ResolutionTextBox.Text);
-            FactorizationTest.interpolation = InterpolationCheckBox.IsChecked.Value;
-            FactorizationTest.Run(fileTextBox.Text);
+            FactorizationSparsityPatternTest.resolution = UInt32.Parse(ResolutionTextBox.Text);
+            FactorizationSparsityPatternTest.interpolation = InterpolationCheckBox.IsChecked.Value;
+            FactorizationSparsityPatternTest.Run(fileTextBox.Text);
+        }
+        
+        private void RunBenchmarkButton_Click(object sender, RoutedEventArgs e)
+        {
+            FactorizationBenchmarksTest.Run(false);
+        }
+        
+        private void RunBenchmarkParallelButton_Click(object sender, RoutedEventArgs e)
+        {
+            FactorizationBenchmarksTest.Run(true);
         }
         
         private void FileChooser_Click(object sender, RoutedEventArgs e)

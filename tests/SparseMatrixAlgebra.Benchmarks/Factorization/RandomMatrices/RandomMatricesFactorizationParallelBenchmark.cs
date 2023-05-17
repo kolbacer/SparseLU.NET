@@ -11,7 +11,7 @@ namespace SparseMatrixAlgebra.Benchmarks.Factorization.RandomMatrices;
 // [RPlotExporter] // Должен быть установлен R и добавлен в PATH
 [Config(typeof(Config))]
 [HideColumns(Column.Gen0, Column.Gen1, Column.Gen2, Column.Error, Column.RatioSD)]
-public class RandomMatricesFactorizationBenchmark
+public class RandomMatricesFactorizationParallelBenchmark
 { 
     private class Config : ManualConfig
     {
@@ -68,35 +68,34 @@ public class RandomMatricesFactorizationBenchmark
 
     [Benchmark(Baseline = true, OperationsPerInvoke = NumberOfIterations)]
     [ArgumentsSource(nameof(TestMatrices))]
-    public void CsrLuFactorization(RandomTestRun TestMatrix)
+    public void CsrLuFactorizationParallel(RandomTestRun TestMatrix)
     {
         for (int i = 0; i < NumberOfIterations; ++i)
         {
-            resultLUs[i] = TestMatrix.MatrixArray[i].LuFactorize();
+            resultLUs[i] = TestMatrix.MatrixArray[i].LuFactorizeParallel();
         }
-        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorization.{TestMatrix.Title}.txt";
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationparallel.{TestMatrix.Title}.txt";
     }
 
     [Benchmark(OperationsPerInvoke = NumberOfIterations)]
     [ArgumentsSource(nameof(TestMatrices))]
-    public void CsrLuFactorizationMarkowitz(RandomTestRun TestMatrix)
+    public void CsrLuFactorizationMarkowitzParallel(RandomTestRun TestMatrix)
     {
         for (int i = 0; i < NumberOfIterations; ++i)
         {
-            resultLUs[i] = TestMatrix.MatrixArray[i].LuFactorizeMarkowitz(0.001);
+            resultLUs[i] = TestMatrix.MatrixArray[i].LuFactorizeMarkowitzParallel(0.001);
         }
-        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitz.{TestMatrix.Title}.txt";
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitzparallel.{TestMatrix.Title}.txt";
     }
     
     [Benchmark(OperationsPerInvoke = NumberOfIterations)]
     [ArgumentsSource(nameof(TestMatrices))]
-    public void CsrLuFactorizationMarkowitz2(RandomTestRun TestMatrix)
+    public void CsrLuFactorizationMarkowitz2Parallel(RandomTestRun TestMatrix)
     {
         for (int i = 0; i < NumberOfIterations; ++i)
         {
-            resultLUs[i] = TestMatrix.MatrixArray[i].LuFactorizeMarkowitz2(0.001);
+            resultLUs[i] = TestMatrix.MatrixArray[i].LuFactorizeMarkowitz2Parallel(0.001);
         }
-        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitz2.{TestMatrix.Title}.txt";
+        resultFile = $"{ResultDirectory}\\nonzeros.csrlufactorizationmarkowitz2parallel.{TestMatrix.Title}.txt";
     }
-    
 }

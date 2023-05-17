@@ -28,6 +28,8 @@ public class NonzerosColumn : IColumn
             testRun = (FactorizationTestRun)benchmarkCase.Parameters.GetArgument("TestMatrix").Value;
         else if (benchmarkCase.Descriptor.Type == typeof(RandomMatricesFactorizationBenchmark))
             testRun = (RandomTestRun)benchmarkCase.Parameters.GetArgument("TestMatrix").Value;
+        else if (benchmarkCase.Descriptor.Type == typeof(RandomMatricesFactorizationParallelBenchmark))
+            testRun = (RandomTestRun)benchmarkCase.Parameters.GetArgument("TestMatrix").Value;
 
 
         if (init)
@@ -51,19 +53,12 @@ public class NonzerosColumn : IColumn
                 resultDirectory = SpecificMatricesFactorizationBenchmark.ResultDirectory;
             else if (benchmarkCase.Descriptor.Type == typeof(RandomMatricesFactorizationBenchmark))
                 resultDirectory = RandomMatricesFactorizationBenchmark.ResultDirectory;
+            else if (benchmarkCase.Descriptor.Type == typeof(RandomMatricesFactorizationParallelBenchmark))
+                resultDirectory = RandomMatricesFactorizationParallelBenchmark.ResultDirectory;
+            string methodName = benchmarkCase.Descriptor.WorkloadMethod.Name.ToLower();
             string matrixName = testRun.Title;
-            string? filename = benchmarkCase.Descriptor.MethodIndex switch
-            {
-                0 => $"{resultDirectory}\\nonzeros.csrlufactorization.{matrixName}.txt",
-                1 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitz.{matrixName}.txt",
-                2 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitz2.{matrixName}.txt",
-                3 => $"{resultDirectory}\\nonzeros.csrlufactorizationparallel.{matrixName}.txt",
-                4 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitzparallel.{matrixName}.txt",
-                5 => $"{resultDirectory}\\nonzeros.csrlufactorizationmarkowitz2parallel.{matrixName}.txt",
-                _ => null
-            };
+            string filename = $"{resultDirectory}\\nonzeros.{methodName}.{matrixName}.txt";
 
-            if (filename == null) return "unknown method";
             return File.Exists(filename) ? File.ReadAllText(filename) : "no file";
         }
     }

@@ -11,7 +11,7 @@ using SparseMatrixAnalysis.Plots;
 
 namespace SparseMatrixAnalysis.Tests;
 
-public static class FactorizationTest
+public static class FactorizationSparsityPatternTest
 {
     public static uint resolution = 100;
     public static bool interpolation = false;
@@ -113,6 +113,8 @@ public static class FactorizationTest
         
         model.Axes.Add(new LinearColorAxis
         {
+            Title = "Доля ненулевых элементов в области",
+            Position = AxisPosition.Right,
             Palette = palette
             // Palette = OxyPalettes.Rainbow(100)
         });

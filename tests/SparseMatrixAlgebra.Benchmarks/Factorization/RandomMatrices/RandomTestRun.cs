@@ -8,9 +8,9 @@ namespace SparseMatrixAlgebra.Benchmarks.Factorization.RandomMatrices;
 /// </summary>
 public class RandomTestRun: ITestRun
 {
-    public const int N = RandomMatricesFactorizationBenchmark.NumberOfIterations;
+    public readonly int N = 1;
 
-    public readonly SparseMatrixCsr[] MatrixArray = new SparseMatrixCsr[N];
+    public readonly SparseMatrixCsr[] MatrixArray;
     public string Title { get; set; }
 
     public string Case { get; } = "random";
@@ -20,8 +20,10 @@ public class RandomTestRun: ITestRun
     /// </summary>
     /// <param name="size">размерность матрицы</param>
     /// <param name="fillInRow">среднее кол-во ненулевых элементов в строке</param>
-    public RandomTestRun(int size, int fillInRow)
+    public RandomTestRun(int size, int fillInRow, int N)
     {
+        this.N = N;
+        this.MatrixArray = new SparseMatrixCsr[N];
         Title = $"N={size}_F={fillInRow}N";
         for (int i = 0; i < N; ++i)
         {

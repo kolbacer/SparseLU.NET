@@ -6,51 +6,144 @@
         xmlns:local="clr-namespace:SparseMatrixAnalysis"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="20"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
-        </Grid.RowDefinitions>
+    <TabControl x:Name="Analyzers">
 
-        <TextBlock Grid.Column="2" Grid.Row="1" MaxWidth="800"
-                   Margin="0,0,0,10" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
-            Выберите файл, содержащий матрицу в формате MatrixMarket coordinate. <LineBreak/>
-        </TextBlock>
+        <TabItem x:Name="SparsityPatternAnalyzer">
+            
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="3">Шаблон разреженности</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            
+            <TabItem.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition MinWidth="500" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="1" MaxWidth="800" Grid.ColumnSpan="4"
+                               Margin="0,0,0,10" FontSize="18" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Center">
+                        Анализ разреженности матрицы при различных способах LU-разложения
+                    </TextBlock>
+                    
+                    <TextBlock Grid.Row="3" Grid.Column="2" MaxWidth="800" Grid.ColumnSpan="2"
+                               Margin="0,0,0,10" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        Выберите файл, содержащий матрицу.<LineBreak />
+                        <LineBreak />
+                        Формат данных: MatrixMarket coordinate. В первой строке размеры матрицы, далее<LineBreak />
+                        тройки чисел (строка, столбец, значение).<LineBreak />
+                        <LineBreak />
+                        Матрица должна быть квадратная, с целочисленными или вещественными значениями.
+                    </TextBlock>
 
-        <TextBox Grid.Column="2" Grid.Row="2"
-                 MinWidth="100" MaxWidth="600"
-                 Margin="0,0,10,0"
-                 x:Name="fileTextBox"/>
-        <Button Grid.Column="3" Grid.Row="2"
-                MinWidth="100" MaxWidth="150"
-            x:Name="FileChooser" Content="Выбрать файл" Click="FileChooser_Click" HorizontalAlignment="Left" Padding="10,1,1,1" />
-        <TextBlock Grid.Column="2" Grid.Row="3"
-                   Margin="0,5,10,0" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Right">
-            Разрешение шаблона </TextBlock>
-        <TextBox Grid.Column="3" Grid.Row="3" Margin="0,10,10,0" x:Name="ResolutionTextBox" PreviewTextInput="ResolutionValidationTextBox"/>
-        <TextBlock Grid.Column="2" Grid.Row="4"
-                   Margin="0,5,10,0" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Right">
-            Интерполяция </TextBlock>
-        <CheckBox Grid.Column="3" Grid.Row="4" Margin="0,10,0,0" x:Name="InterpolationCheckBox" IsThreeState="False" IsChecked="False" />
-        <Button Grid.Column="2" Grid.Row="5"
-                Grid.ColumnSpan="2"
-                MinWidth="100" MaxWidth="200"
-                Margin="20"
-            x:Name="RunButton" Content="Run" Click="RunButton_Click"/>
-    </Grid>
+                    <TextBox Grid.Row="4" Grid.Column="2"
+                             MinWidth="100" MaxWidth="600"
+                             Margin="0,0,10,0"
+                             x:Name="fileTextBox" />
+                    <Button Grid.Row="4" Grid.Column="3"
+                            MinWidth="100" MaxWidth="150"
+                            x:Name="FileChooser" Content="Выбрать файл" Click="FileChooser_Click"
+                            HorizontalAlignment="Left" Padding="10,1,1,1" />
+                    <TextBlock Grid.Row="5" Grid.Column="2"
+                               Margin="0,5,10,0" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        Разрешение шаблона
+                    </TextBlock>
+                    <TextBox Grid.Row="5" Grid.Column="3" Margin="0,10,10,0" x:Name="ResolutionTextBox"
+                             PreviewTextInput="ResolutionValidationTextBox" />
+                    <TextBlock Grid.Row="6" Grid.Column="2"
+                               Margin="0,5,10,0" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        Интерполяция
+                    </TextBlock>
+                    <CheckBox Grid.Row="6" Grid.Column="3" Margin="0,10,0,0" x:Name="InterpolationCheckBox"
+                              IsThreeState="False" IsChecked="False" />
+                    <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2"
+                            MinWidth="100" MaxWidth="200"
+                            Margin="20"
+                            x:Name="RunSparsityPatternAnalyzerButton" Content="Пуск" Click="RunSparsityPatternAnalyzerButton_Click" />
+                </Grid>
+            </TabItem.Content>
+            
+        </TabItem>
+
+        <TabItem x:Name="BenchmarksAnalyzer">
+            
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="3">Бенчмарки</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            
+            <TabItem.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="1" MaxWidth="800" Grid.ColumnSpan="5"
+                               Margin="0,0,0,10" FontSize="18" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Center">
+                        Анализ производительности алгоритмов
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3"
+                               Margin="0,0,0,10" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        Запуск бенчмарков, измеряющих производительность различных реализаций метода LU-разложения.<LineBreak />
+                        <LineBreak />
+                        Тесты проводятся на случайных матрицах размера 1000x1000, с различной степенью заполненности. <LineBreak />
+                        Для матрицы каждого вида генерируется несколько экземпляров, итоговое время разложения усредняется. <LineBreak />
+                        <LineBreak />
+                        Информация выводится в консоль, по завершении бенчмарков строится график.
+                    </TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="2"
+                               Margin="30,30,0,5" FontSize="14" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        Последовательные методы <LineBreak />
+                    </TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="4"
+                               Margin="0,30,30,5" FontSize="14" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        Параллельные методы <LineBreak />
+                    </TextBlock>
+                    <Button Grid.Row="4" Grid.Column="2"
+                            Width="100" Margin="30,0,0,0"
+                            x:Name="RunBenchmarkButton" Content="Пуск" Click="RunBenchmarkButton_Click" />
+                    <Button Grid.Row="4" Grid.Column="4"
+                            Width="100" Margin="0,0,30,0"
+                            x:Name="RunBenchmarkParallelButton" Content="Пуск" Click="RunBenchmarkParallelButton_Click" />
+                </Grid>
+            </TabItem.Content>
+            
+        </TabItem>
+
+    </TabControl>
 </Window>
