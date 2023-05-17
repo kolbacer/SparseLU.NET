@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using SparseMatrixAlgebra.Common.Exceptions;
 using SparseMatrixAlgebra.Common.Extensions;
 using SparseMatrixAlgebra.Sparse.CSR;
@@ -73,7 +74,7 @@ public static class MatrixBuilder
             if (!line.StartsWith('%')) break;
             if (line.StartsWith("%%"))
             {
-                tokens = line.Split(' ');
+                tokens = Regex.Split(line, @" +");
                 
                 if (tokens[2] != "coordinate") 
                     throw new InvalidFileFormatException("Format must be coordinate");
@@ -105,7 +106,7 @@ public static class MatrixBuilder
         if (line == null) throw new InvalidFileFormatException("Can't read matrix dimensions");
             
         // read size
-        tokens = line.Split(' ');
+        tokens = Regex.Split(line, @" +");
         stype rows = stype.Parse(tokens[0]);
         stype columns = stype.Parse(tokens[1]);
         SparseMatrixCsr matrix = new SparseMatrixCsr(rows, columns);
@@ -116,7 +117,7 @@ public static class MatrixBuilder
             line = line.Trim();
             if (line.Length == 0) continue;
 
-            tokens = line.Split(' ');
+            tokens = Regex.Split(line, @" +");
             stype row = stype.Parse(tokens[0]);
             stype col = stype.Parse(tokens[1]);
             vtype value = vtype.Parse(tokens[2], CultureInfo.InvariantCulture);
