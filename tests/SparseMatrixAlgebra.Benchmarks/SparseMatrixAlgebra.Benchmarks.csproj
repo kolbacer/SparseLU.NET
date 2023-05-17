@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
+      <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
