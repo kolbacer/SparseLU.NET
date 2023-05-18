@@ -1,4 +1,5 @@
-﻿using SparseMatrixAlgebra.Common.Exceptions;
+﻿using System.Runtime.InteropServices;
+using SparseMatrixAlgebra.Common.Exceptions;
 using SparseMatrixAlgebra.Common.Extensions;
 using Element = SparseMatrixAlgebra.Sparse.CSR.SparseVector.Element;
     
@@ -264,22 +265,16 @@ public partial class SparseMatrixCsr
         for (stype i = 0; i < Q.Length; ++i)
             inversedQ[Q[i] - 1] = i + 1;
         
-        for (stype i = 0; i < Rows; ++i)
+        Parallel.For(0, Rows, (i) =>
         {
-            stype[] indexArray = columnIndexRows[i].ToArray();
-            vtype[] valueArray = valueRows[i].ToArray();
+            Span<stype> indexSpan = CollectionsMarshal.AsSpan(columnIndexRows[i]);
+            Span<vtype> valueSpan = CollectionsMarshal.AsSpan(valueRows[i]);
 
-            for (int j = 0; j < indexArray.Length; ++j)
-                indexArray[j] = inversedQ[indexArray[j]] - 1;
-
-            Array.Sort(indexArray, valueArray);
+            for (int j = 0; j < indexSpan.Length; ++j)
+                indexSpan[j] = inversedQ[indexSpan[j]] - 1;
             
-            columnIndexRows[i].Clear();
-            columnIndexRows[i].AddRange(indexArray);
-
-            valueRows[i].Clear();
-            valueRows[i].AddRange(valueArray);
-        }
+            indexSpan.Sort(valueSpan);
+        });
 
         return this;
     }
