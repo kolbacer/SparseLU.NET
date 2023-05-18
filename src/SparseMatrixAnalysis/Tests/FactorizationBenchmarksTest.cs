@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Running;
 using SparseMatrixAlgebra.Benchmarks.Factorization.RandomMatrices;
 using System.Globalization;
+using System.Windows;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Legends;
@@ -14,10 +15,16 @@ public static class FactorizationBenchmarksTest
 {
     public static void Run(bool parallel = false)
     {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            ((WindowSettings)Application.Current.MainWindow.DataContext).LoaderTextTab2 = "Бенчмарки работают";
+            ((WindowSettings)Application.Current.MainWindow.DataContext).ShowLoaderTab2 = Visibility.Visible;
+        });
+        
         var summary = parallel
             ? BenchmarkRunner.Run<RandomMatricesFactorizationParallelBenchmark>()
             : BenchmarkRunner.Run<RandomMatricesFactorizationBenchmark>();
-        
+
         int methodIndex = Array.IndexOf(summary.Table.FullHeader, "Method");
         int matrixIndex = Array.IndexOf(summary.Table.FullHeader, "TestMatrix");
         int timeIndex = Array.IndexOf(summary.Table.FullHeader, "Mean");
@@ -26,11 +33,15 @@ public static class FactorizationBenchmarksTest
         var matrixColumn = summary.Table.Columns[matrixIndex];
         var timeColumn = summary.Table.Columns[timeIndex];
 
-        int contentLength = methodColumn.Content.Length;
+        summary = null;
+        GC.Collect();
+        
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            ((WindowSettings)Application.Current.MainWindow.DataContext).LoaderTextTab2 = "Отрисовка графика";
+        });
 
-        RandomMatricesBenchmarkPlot plot = new RandomMatricesBenchmarkPlot();
-        RandomMatricesBenchmarkPlotView plotView = new RandomMatricesBenchmarkPlotView();
-        plot.DataContext = plotView;
+        int contentLength = methodColumn.Content.Length;
 
         string methodName1 = parallel ? "LuFactorizeParallel()" : "LuFactorize()";
         string methodName2 = parallel ? "LuFactorizeMarkowitzParallel()" : "LuFactorizeMarkowitz()";
@@ -39,7 +50,7 @@ public static class FactorizationBenchmarksTest
         string benchmarkName1 = parallel ? "CsrLuFactorizationParallel" : "CsrLuFactorization";
         string benchmarkName2 = parallel ? "CsrLuFactorizationMarkowitzParallel" : "CsrLuFactorizationMarkowitz";
         string benchmarkName3 = parallel ? "CsrLuFactorizationMarkowitz2Parallel" : "CsrLuFactorizationMarkowitz2";
-        
+
         // create lines and fill them with data points
         var line1 = new LineSeries()
         {
@@ -85,7 +96,7 @@ public static class FactorizationBenchmarksTest
         line1.Points.Sort(comparison);
         line2.Points.Sort(comparison);
         line3.Points.Sort(comparison);
-        
+
         // create the model and add the lines to it
         var model = new PlotModel
         {
@@ -111,11 +122,20 @@ public static class FactorizationBenchmarksTest
             Position = AxisPosition.Left,
             Title = "Время работы, с"
         });
-        
-        // load the model into the user control
-        plotView.RandomMatricesBenchmarkPlotModel = model;
 
-        plot.Show();
+        GC.Collect();
+        
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            RandomMatricesBenchmarkPlot plot = new RandomMatricesBenchmarkPlot();
+            RandomMatricesBenchmarkPlotView plotView = new RandomMatricesBenchmarkPlotView();
+            plot.DataContext = plotView;
+            plotView.RandomMatricesBenchmarkPlotModel = model;
+
+            plot.Show();
+            
+            ((WindowSettings)Application.Current.MainWindow.DataContext).ShowLoaderTab2 = Visibility.Hidden;
+        });
     }
 
     private static int GetFillFromMatrix(string matrixName)

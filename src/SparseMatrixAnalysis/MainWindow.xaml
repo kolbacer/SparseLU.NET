@@ -27,6 +27,7 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="20" />
                     </Grid.RowDefinitions>
@@ -78,6 +79,30 @@
                             MinWidth="100" MaxWidth="200"
                             Margin="20"
                             x:Name="RunSparsityPatternAnalyzerButton" Content="Пуск" Click="RunSparsityPatternAnalyzerButton_Click" />
+                    
+                    <TextBlock Grid.Row="8" Grid.Column="2" 
+                               HorizontalAlignment="Right"
+                               FontSize="13" Foreground="Blue"
+                               Visibility="{Binding ShowLoaderTab1}"
+                               Text="{Binding LoaderTextTab1}">
+                    </TextBlock>
+                    <TextBlock Grid.Row="8" Grid.Column="3" 
+                               Visibility="{Binding ShowLoaderTab1}"
+                               FontSize="13" Foreground="Blue">
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard Duration="0:0:3" RepeatBehavior="Forever">
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Text">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="."/>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:1" Value=".."/>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:2" Value="..."/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
                 </Grid>
             </TabItem.Content>
             
@@ -96,6 +121,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -140,6 +166,32 @@
                     <Button Grid.Row="4" Grid.Column="4"
                             Width="100" Margin="0,0,30,0"
                             x:Name="RunBenchmarkParallelButton" Content="Пуск" Click="RunBenchmarkParallelButton_Click" />
+                    
+                    <TextBlock Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" 
+                               HorizontalAlignment="Right"
+                               Margin="0,30,0,0"
+                               FontSize="13" Foreground="Blue"
+                               Visibility="{Binding ShowLoaderTab2}"
+                               Text="{Binding LoaderTextTab2}">
+                    </TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="4"
+                               Margin="0,30,0,0"
+                               Visibility="{Binding ShowLoaderTab2}"
+                               FontSize="13" Foreground="Blue">
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard Duration="0:0:3" RepeatBehavior="Forever">
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Text">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="."/>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:1" Value=".."/>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:2" Value="..."/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
                 </Grid>
             </TabItem.Content>
             
