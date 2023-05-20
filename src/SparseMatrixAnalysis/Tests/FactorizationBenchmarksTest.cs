@@ -17,7 +17,7 @@ public static class FactorizationBenchmarksTest
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            ((WindowSettings)Application.Current.MainWindow.DataContext).LoaderTextTab2 = "Бенчмарки работают";
+            ((WindowSettings)Application.Current.MainWindow.DataContext).LoaderTextTab2 = "Бенчмарки выполняются";
             ((WindowSettings)Application.Current.MainWindow.DataContext).ShowLoaderTab2 = Visibility.Visible;
         });
         

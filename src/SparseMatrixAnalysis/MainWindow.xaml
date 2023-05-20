@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SparseMatrixAnalysis"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="800">
     <TabControl x:Name="Analyzers">
 
         <TabItem x:Name="SparsityPatternAnalyzer">
@@ -52,7 +52,8 @@
                         Формат данных: MatrixMarket coordinate. В первой строке размеры матрицы, далее<LineBreak />
                         тройки чисел (строка, столбец, значение).<LineBreak />
                         <LineBreak />
-                        Матрица должна быть квадратная, с целочисленными или вещественными значениями.
+                        Матрица должна быть квадратная, невырожденная, с целочисленными или<LineBreak />
+                        вещественными значениями.
                     </TextBlock>
 
                     <TextBox Grid.Row="4" Grid.Column="2"
@@ -147,10 +148,10 @@
                                Margin="0,0,0,10" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
                         Запуск бенчмарков, измеряющих производительность различных реализаций метода LU-разложения.<LineBreak />
                         <LineBreak />
-                        Тесты проводятся на случайных матрицах размера 1000x1000, с различной степенью заполненности. <LineBreak />
+                        Тесты проводятся на случайных матрицах размера 1000x1000 с различной степенью заполненности. <LineBreak />
                         Для матрицы каждого вида генерируется несколько экземпляров, итоговое время разложения усредняется. <LineBreak />
                         <LineBreak />
-                        Информация выводится в консоль, по завершении бенчмарков строится график.
+                        Информация выводится в консоль, по завершении работы бенчмарков строится график.
                     </TextBlock>
                     <TextBlock Grid.Row="3" Grid.Column="2"
                                Margin="30,30,0,5" FontSize="14" VerticalAlignment="Bottom" HorizontalAlignment="Center">
